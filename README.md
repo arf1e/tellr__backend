@@ -4,9 +4,9 @@
 1. Прописать `pipenv install`, это установит все зависимости проекта
 2. Прописать `pipenv shell`, это активирует виртуальное окружение
 3. В папке tellr создать файл `config.cfg`, где нужно прописать следующие параметры:
-..1. SECRET_KEY
-..2. SQLALCHEMY_DATABASE_URI
-..3. SQLALCHEMY_TRACK_MODIFICATIONS='FALSE'
-..4. PROPAGATE_EXCEPTIONS
+⋅⋅* SECRET_KEY
+⋅⋅* SQLALCHEMY_DATABASE_URI
+⋅⋅* SQLALCHEMY_TRACK_MODIFICATIONS
+⋅⋅* PROPAGATE_EXCEPTIONS
 4. Некоторые из вышеуказанных опциональные, это просто содержание моего файла.
 5. Прописать `python tellr.py`
