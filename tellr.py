@@ -4,4 +4,6 @@ from tellr import app
     # То есть буквально что в баше было прописано 'python tellr.py'
     
 if __name__ == '__main__':
-    app.run(debug=True)
+    from tellr.db import db
+    db.init_app(app)
+    app.run(port=1337, debug=True)

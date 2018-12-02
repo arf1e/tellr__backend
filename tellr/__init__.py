@@ -1,17 +1,15 @@
-#
-# В этом проекте будет много комментариев, потому что я только-только вкатываюсь в питон и мне необходимо это делать
-#
-from flask import Flask, jsonify
+from flask import Flask
+from flask_restplus import Api
+from flask_jwt_extended import JWTManager
 
-# интерфейс бд
-# я юзаю постгрес, так что для работы этой штуки за кадром еще нужен psycopg2
-from flask_sqlalchemy import SQLAlchemy
+from tellr.db import db
 
 # Инстанс
 app = Flask(__name__)
-
 # Конфигурации переехали
 app.config.from_pyfile('./config.cfg', silent=True)
+api = Api()
 
-# Инстанс бд
-db = SQLAlchemy(app)
+@app.before_first_request
+def create_tables():
+  db.create_all()
