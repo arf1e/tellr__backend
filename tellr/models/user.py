@@ -19,23 +19,7 @@ class UserModel(Model):
     first_name = db.Column(db.String)
     birthday = db.Column(db.DateTime, default=date(1997, 10, 16))
 
-    def __init__(self, username, password, first_name, sex):
-        self.username = username
-        self.password = password
-        self.first_name = first_name
-        self.sex = sex
-
-    # Служебные методы
-    def json(self):
-        return {
-            "id": self.id,
-            "username": self.username,
-            "first_name": self.first_name,
-            "age": calculate_age(self.birthday),
-            "sex": "Male" if self.sex else "Female",
-        }
-
-    # Взаимодействие с БД
+    # Essential db methods
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
@@ -44,7 +28,7 @@ class UserModel(Model):
         db.session.delete(self)
         db.session.commit()
 
-    # Ещё кое-какие нужные служебные методы, но это уже для дальнейших манипуляций
+    # Some more db methods
     @classmethod
     def find_by_username(cls, username):
         return cls.query.filter_by(username=username).first()
@@ -53,6 +37,7 @@ class UserModel(Model):
     def find_by_id(cls, _id):
         return cls.query.filter_by(id=_id).first()
 
+    # fetch random users 
     @classmethod
     def find_males(cls):
         return cls.query.filter_by(sex=True).order_by(func.random()).limit(4)
