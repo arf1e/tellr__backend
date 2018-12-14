@@ -1,15 +1,15 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_restplus import Api
 from flask_jwt_extended import JWTManager
 from tellr.db import db
 from tellr.blacklist import BLACKLIST
-
-# resources
+from marshmallow import ValidationError
+# Resources
 from tellr.resources.user import UserRegister, User, UserLogin, UserLogout, UserQuery
 
-# Инстанс
+# App instance
 app = Flask(__name__)
-# Конфигурации переехали
+# Config file
 app.config.from_pyfile("./config.py", silent=True)
 api = Api(app)
 
@@ -18,6 +18,10 @@ jwt = JWTManager(app)
 @jwt.token_in_blacklist_loader
 def check_if_token_in_blacklist(decrypted_token):
     return decrypted_token["jti"] in BLACKLIST
+
+@app.errorhandler(ValidationError)
+def handle_marshmallow_validation(err): # except ValidationError as error
+    return jsonify(err.messages), 400
 
 
 @app.before_first_request

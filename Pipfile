@@ -10,6 +10,9 @@ flask-jwt = "*"
 flask-sqlalchemy = "*"
 flask-jwt-extended = "*"
 "psycopg2-binary" = "*"
+marshmallow = "==3.0.0b19"
+flask-marshmallow = "*"
+marshmallow-sqlalchemy = "*"
 
 [dev-packages]
 pylint = "*"
