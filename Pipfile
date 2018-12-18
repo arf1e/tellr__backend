@@ -13,6 +13,8 @@ flask-jwt-extended = "*"
 marshmallow = "==3.0.0b19"
 flask-marshmallow = "*"
 marshmallow-sqlalchemy = "*"
+flask-uploads = "*"
+python-dotenv = "*"
 
 [dev-packages]
 pylint = "*"
