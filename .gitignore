@@ -1,5 +1,5 @@
 .vscode/
 __pycache__/
-tellr/config.py
 tellr/data.db
+tellr/.env
 .idea/
