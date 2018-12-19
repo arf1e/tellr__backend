@@ -3,3 +3,5 @@ __pycache__/
 tellr/data.db
 tellr/.env
 .idea/
+tellr/static/images/avatars/*
+!tellr/static/images/avatars/flower.png

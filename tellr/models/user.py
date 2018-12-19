@@ -5,7 +5,6 @@ from datetime import date
 from tellr.utils import calculate_age
 from sqlalchemy.sql.expression import func, select
 
-
 class UserModel(Model):
     __tablename__ = "users"
 

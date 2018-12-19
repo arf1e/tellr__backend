@@ -9,7 +9,7 @@ from tellr.libs.image_helper import IMAGE_SET
 from dotenv import load_dotenv
 # Resources
 from tellr.resources.user import UserRegister, User, UserLogin, UserLogout, UserQuery
-from tellr.resources.image import AvatarUpload
+from tellr.resources.image import AvatarUpload, Avatar
 
 # App instance
 app = Flask(__name__)
@@ -43,3 +43,4 @@ api.add_resource(User, "/user/<int:user_id>")
 api.add_resource(UserLogout, '/logout')
 api.add_resource(UserQuery, '/query')
 api.add_resource(AvatarUpload, '/upload/avatar')
+api.add_resource(Avatar, '/avatar/<int:user_id>')
