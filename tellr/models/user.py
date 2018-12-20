@@ -5,6 +5,7 @@ from datetime import date
 from tellr.utils import calculate_age
 from sqlalchemy.sql.expression import func, select
 
+
 class UserModel(Model):
     __tablename__ = "users"
 
@@ -36,7 +37,7 @@ class UserModel(Model):
     def find_by_id(cls, _id):
         return cls.query.filter_by(id=_id).first()
 
-    # fetch random users 
+    # fetch random users
     @classmethod
     def find_males(cls):
         return cls.query.filter_by(sex=True).order_by(func.random()).limit(4)
@@ -44,5 +45,3 @@ class UserModel(Model):
     @classmethod
     def find_females(cls):
         return cls.query.filter_by(sex=False).order_by(func.random()).limit(4)
-
-    
