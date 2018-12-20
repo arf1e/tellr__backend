@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/arf1e/tellr__backend.svg?branch=master)](https://travis-ci.org/arf1e/tellr__backend)
 # tellr backend
 
 ### Запуск:
