@@ -46,7 +46,7 @@ class UserLogin(Resource):
                 {
                     "access_token": access_token,
                     "refresh_token": refresh_token,
-                    "user": user_schema.dump(user)
+                    "user": user_schema.dump(user),
                 },
                 200,
             )
@@ -75,24 +75,23 @@ class UserLogout(Resource):
     @classmethod
     @jwt_required
     def post(cls):
-        print(get_raw_jwt()['jti'])
+        print(get_raw_jwt()["jti"])
         jti = get_raw_jwt()["jti"]  # jti is "JWT ID", unique identifier for JWT.
         user_id = get_jwt_identity()
         BLACKLIST.add(jti)
-        return {"message": f'User <id={user_id}> has logged out'}, 200
+        return {"message": f"User <id={user_id}> has logged out"}, 200
 
 
 # Поиск
 class UserQuery(Resource):
-  @classmethod
-  @jwt_required
-  def get(cls):
-    user_id = get_jwt_identity()
-    user_data = UserModel.find_by_id(user_id)
-    user = user_schema.dump(user_data)
-    if user['sex'] == True:
-      users = user_list_schema.dump(UserModel.find_females())
-    else:
-      users = user_list_schema.dump(UserModel.find_males()) 
-    return {'users': users}, 200
-
+    @classmethod
+    @jwt_required
+    def get(cls):
+        user_id = get_jwt_identity()
+        user_data = UserModel.find_by_id(user_id)
+        user = user_schema.dump(user_data)
+        if user["sex"] == True:
+            users = user_list_schema.dump(UserModel.find_females())
+        else:
+            users = user_list_schema.dump(UserModel.find_males())
+        return {"users": users}, 200
