@@ -15,9 +15,7 @@ from tellr.resources.image import AvatarUpload, Avatar
 # App instance
 app = Flask(__name__)
 # Config
-load_dotenv("tellr/.env", verbose=True)  # Set your own env vars based on .env.example !
 app.config.from_object("tellr.default_config")
-app.config.from_envvar("APPLICATION_SETTINGS")
 patch_request_class(app, 10 * 1024 * 1024)
 configure_uploads(app, IMAGE_SET)
 api = Api(app)
