@@ -1,6 +1,5 @@
 .vscode/
 __pycache__/
-tellr/data.db
 tellr/.env
 .idea/
 tellr/static/images/avatars/*
