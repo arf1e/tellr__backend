@@ -1,6 +1,7 @@
 .vscode/
 __pycache__/
 tellr/.env
+tellr/data.db
 .idea/
 tellr/static/images/avatars/*
 !tellr/static/images/avatars/flower.png
