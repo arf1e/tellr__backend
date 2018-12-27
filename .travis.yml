@@ -5,4 +5,5 @@ install:
   - "pip install pipenv"
   - "pipenv sync"
   - "pipenv install pytest --skip-lock"
+  - "pipenv install marshmallow==3.0.0b19 --skip-lock"
 script: python -m pytest tellr/tests/
