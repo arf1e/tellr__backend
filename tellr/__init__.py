@@ -37,6 +37,9 @@ def handle_marshmallow_validation(err):  # except ValidationError as error
 def create_tables():
     db.create_all()
 
+from tellr.db import db
+db.init_app(app)
+
 
 api.add_resource(UserRegister, "/register")
 api.add_resource(UserLogin, "/login")
