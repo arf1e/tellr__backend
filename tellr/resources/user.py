@@ -11,6 +11,7 @@ from flask_jwt_extended import (
 from tellr.models.user import UserModel
 from tellr.schemas.user import UserSchema
 from tellr.blacklist import BLACKLIST
+from datetime import date, datetime
 
 
 user_schema = UserSchema()
@@ -21,6 +22,9 @@ class UserRegister(Resource):
     def post(self):
 
         user_json = request.get_json()
+        if 'birthday' in user_json:
+            bday = user_json['birthday'].split('-')
+            user_json['birthday'] = f'{bday[2]}-{bday[1]}-{bday[0]}T00:00:00Z'
         user_data = user_schema.load(user_json)
         user = user_data
 
