@@ -2,10 +2,8 @@ from tellr.ma import ma
 from tellr.models.user import UserModel
 from tellr.schemas.fields.age import Age
 from tellr.schemas.fields.avatar import Avatar
-from marshmallow import fields
-
 ModelSchema = ma.ModelSchema
-from tellr.libs import image_helper
+from marshmallow import fields
 
 
 class UserSchema(ModelSchema):
@@ -17,3 +15,4 @@ class UserSchema(ModelSchema):
     # custom fields
     age = Age(attribute="birthday")
     avatar = Avatar(attribute="id")
+    lines = ma.Nested('LineSchema', many=True, exclude=('user', 'user_id', 'id', 'correct_id'))

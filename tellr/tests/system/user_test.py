@@ -77,4 +77,4 @@ class UserTest(BaseTest):
                 )
 
                 self.assertEqual(response.status_code, 400)
-                self.assertDictEqual({'msg': 'user exists'}, json.loads(response.data))
+                self.assertDictEqual({"msg": "user exists"}, json.loads(response.data))
