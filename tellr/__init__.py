@@ -11,6 +11,9 @@ from dotenv import load_dotenv
 # Resources
 from tellr.resources.user import UserRegister, User, UserLogin, UserLogout, UserQuery
 from tellr.resources.image import AvatarUpload, Avatar
+from tellr.resources.question import Question, Questions
+from tellr.resources.answer import Answer
+from tellr.resources.line import Line, Lines
 
 # App instance
 app = Flask(__name__)
@@ -37,7 +40,9 @@ def handle_marshmallow_validation(err):  # except ValidationError as error
 def create_tables():
     db.create_all()
 
+
 from tellr.db import db
+
 db.init_app(app)
 
 
@@ -48,3 +53,8 @@ api.add_resource(UserLogout, "/logout")
 api.add_resource(UserQuery, "/query")
 api.add_resource(AvatarUpload, "/upload/avatar")
 api.add_resource(Avatar, "/avatar/<int:user_id>")
+api.add_resource(Question, '/question')
+api.add_resource(Questions, '/questions')
+api.add_resource(Answer, '/answer')
+api.add_resource(Line, '/line')
+api.add_resource(Lines, '/lines')
