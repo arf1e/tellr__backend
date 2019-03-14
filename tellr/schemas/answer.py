@@ -3,7 +3,8 @@ from tellr.models.answer import AnswerModel
 
 ModelSchema = ma.ModelSchema
 
+
 class AnswerSchema(ModelSchema):
     class Meta:
-      model = AnswerModel
-      include_fk = True
+        model = AnswerModel
+        include_fk = True

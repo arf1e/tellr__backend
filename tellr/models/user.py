@@ -6,6 +6,7 @@ from tellr.utils import calculate_age
 from sqlalchemy.sql.expression import func, select
 from tellr.models.line import LineModel
 
+
 class UserModel(Model):
     __tablename__ = "users"
 
@@ -19,7 +20,7 @@ class UserModel(Model):
     sex = db.Column(db.Boolean)
     first_name = db.Column(db.String)
     birthday = db.Column(db.DateTime, default=date(1997, 10, 16))
-    lines = db.relationship('LineModel', lazy="dynamic")
+    lines = db.relationship("LineModel", lazy="dynamic")
 
     # Essential db methods
     def save_to_db(self):

@@ -1,30 +1,32 @@
 from tellr.db import db
 from tellr.models.question import QuestionModel
 from tellr.models.answer import AnswerModel
+
 Model = db.Model
 
+
 class LineModel(Model):
-  __tablename__ = 'lines'
-  
-  id = db.Column(db.Integer, primary_key=True)
+    __tablename__ = "lines"
 
-  user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-  user = db.relationship('UserModel')
+    id = db.Column(db.Integer, primary_key=True)
 
-  question_id = db.Column(db.Integer, db.ForeignKey('questions.id'))
-  question = db.relationship('QuestionModel')
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    user = db.relationship("UserModel")
 
-  correct_id = db.Column(db.Integer, db.ForeignKey('answers.id'))
-  correct = db.relationship('AnswerModel', lazy=True)
-  
-  def save_to_db(self):
-    db.session.add(self)
-    db.session.commit()
+    question_id = db.Column(db.Integer, db.ForeignKey("questions.id"))
+    question = db.relationship("QuestionModel")
 
-  def delete_from_db(self):
-    db.session.delete(self)
-    db.session.commit()
+    correct_id = db.Column(db.Integer, db.ForeignKey("answers.id"))
+    correct = db.relationship("AnswerModel", lazy=True)
 
-  @classmethod
-  def get_lines(cls):
-    return cls.query.all()
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete_from_db(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    @classmethod
+    def get_lines(cls):
+        return cls.query.all()
