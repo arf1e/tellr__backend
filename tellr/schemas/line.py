@@ -3,7 +3,6 @@ from tellr.ma import ma
 from tellr.schemas.question import QuestionSchema, AnswerSchema
 from tellr.schemas.user import UserSchema
 from tellr.models.line import LineModel
-from tellr.schemas.fields.answers import Answers
 
 ModelSchema = ma.ModelSchema
 
