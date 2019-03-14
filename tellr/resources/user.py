@@ -9,13 +9,17 @@ from flask_jwt_extended import (
     get_jwt_identity,
 )
 from tellr.models.user import UserModel
+from tellr.models.answer import AnswerModel
 from tellr.schemas.user import UserSchema
+from tellr.schemas.answer import AnswerSchema
 from tellr.blacklist import BLACKLIST
 from datetime import date, datetime
 
 
 user_schema = UserSchema()
 user_list_schema = UserSchema(many=True)
+answer_schema = AnswerSchema()
+answer_list_schema = AnswerSchema(many=True)
 
 
 class UserRegister(Resource):
@@ -39,12 +43,11 @@ class UserLogin(Resource):
     @classmethod
     def post(cls):
         user_json = request.get_json()
+
         user_data = user_schema.load(user_json)
-
         user = UserModel.find_by_username(user_data.username)
-
         if user and safe_str_cmp(user.password, user_data.password):
-            access_token = create_access_token(identity=user.id, fresh=True)
+            access_token = create_access_token(identity=user.id, expires_delta=False)
             refresh_token = create_refresh_token(user.id)
             return (
                 {
@@ -63,8 +66,14 @@ class User(Resource):
         user = UserModel.find_by_id(user_id)
         if not user:
             return {"msg": "user not found"}, 404
-
-        return user_schema.dump(user), 200
+        user_output = user_schema.dump(user)
+        for line in user_output["lines"]:
+            line["answers"] = answer_list_schema.dump(
+                AnswerModel.get_wrong_answers(
+                    question_id=line["question_id"], correct_id=line["correct"]["id"]
+                )
+            )
+        return user_output, 200
 
     @classmethod
     def delete(cls, user_id):
@@ -98,4 +107,11 @@ class UserQuery(Resource):
             users = user_list_schema.dump(UserModel.find_females())
         else:
             users = user_list_schema.dump(UserModel.find_males())
+        for user in users:
+            for line in user["lines"]:
+                line["answers"] = answer_list_schema.dump(
+                AnswerModel.get_wrong_answers(
+                    question_id=line["question_id"], correct_id=line["correct"]["id"]
+                )
+            )
         return {"users": users}, 200
