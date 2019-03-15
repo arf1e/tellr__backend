@@ -1,8 +1,9 @@
 import os
 import re
 from werkzeug.datastructures import FileStorage
-
+from resizeimage import resizeimage
 from flask_uploads import UploadSet, IMAGES
+from PIL import Image
 
 IMAGE_SET = UploadSet("images", IMAGES)  # set name and allowed extensions
 
@@ -52,3 +53,10 @@ def get_extension(file):
     """Return file extension"""
     filename = _retrieve_filename(file)
     return os.path.splitext(filename)[1]
+
+
+def resize(path):
+    with open(path, "r+b") as f:
+        with Image.open(f) as image:
+            img = resizeimage.resize_width(image, 300)
+            img.save(path, image.format)

@@ -23,6 +23,7 @@ class AvatarUpload(Resource):
     This method should be idempotent, meaning uploading a new avatar
     overwrites the previous one.
     """
+
         data = image_schema.load(request.files)
         user_id = get_jwt_identity()
         filename = uuid.uuid3(uuid.NAMESPACE_DNS, f"user_{user_id}")
@@ -40,10 +41,11 @@ class AvatarUpload(Resource):
             avatar_path = image_helper.get_path(
                 image_helper.save_image(data["image"], folder=folder, name=avatar)
             )
+            image_helper.resize(avatar_path)
             return {"message": f"avatar uploaded, path is {avatar_path}"}, 200
         except UploadNotAllowed:
             extension = image_helper.get_extension(data["image"])
-            return {"message": f"'{extension}' is an incorrect extension"}
+            return {"message": f"'{extension}' is an incorrect extension"}, 500
 
 
 class Avatar(Resource):

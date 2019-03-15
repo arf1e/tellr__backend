@@ -16,6 +16,7 @@ marshmallow-sqlalchemy = "*"
 flask-uploads = "*"
 python-dotenv = "*"
 gunicorn = "*"
+python-resize-image = "*"
 
 [dev-packages]
 pylint = "*"

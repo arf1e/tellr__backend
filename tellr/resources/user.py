@@ -109,9 +109,11 @@ class UserQuery(Resource):
             users = user_list_schema.dump(UserModel.find_males())
         for user in users:
             for line in user["lines"]:
+                # [users].len is always 4, so O(n^2) here is no big deal
                 line["answers"] = answer_list_schema.dump(
-                AnswerModel.get_wrong_answers(
-                    question_id=line["question_id"], correct_id=line["correct"]["id"]
+                    AnswerModel.get_wrong_answers(
+                        question_id=line["question_id"],
+                        correct_id=line["correct"]["id"],
+                    )
                 )
-            )
         return {"users": users}, 200
