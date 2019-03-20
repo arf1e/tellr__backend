@@ -48,3 +48,7 @@ class UserModel(Model):
     @classmethod
     def find_females(cls):
         return cls.query.filter_by(sex=False).order_by(func.random()).limit(4)
+
+    def get_lines(self, user_id):
+        return self.lines(user_id=user_id)
+    

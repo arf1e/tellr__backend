@@ -11,14 +11,13 @@ class Answer(Resource):
     def post(self):
         answer_json = request.get_json()
         answer = answer_schema.load(answer_json)
+        duplicate = AnswerModel.find_by_content(answer_json["content"])
+        print(duplicate)
+        if duplicate:
+            return {"answer": answer_schema.dump(duplicate)}, 200
         try:
             answer.save_to_db()
+            answer_entity = answer_schema.dump(answer)
         except:
             return {"msg": "Server error"}, 500
-        return {"msg": "answer added"}, 201
-
-    def get(self):
-        answers = answer_list_schema.dump(
-            AnswerModel.get_wrong_answers(question_id=2, correct_id=1)
-        )
-        return {"answers": answers}, 200
+        return {"answer": answer_entity}, 201

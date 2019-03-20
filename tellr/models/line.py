@@ -19,6 +19,10 @@ class LineModel(Model):
     correct_id = db.Column(db.Integer, db.ForeignKey("answers.id"))
     correct = db.relationship("AnswerModel", lazy=True)
 
+    @classmethod
+    def find_by_id(cls, _id):
+        return cls.query.filter_by(id=_id).first()
+
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()

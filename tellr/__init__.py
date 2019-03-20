@@ -7,6 +7,7 @@ from marshmallow import ValidationError
 from flask_uploads import configure_uploads, patch_request_class
 from tellr.libs.image_helper import IMAGE_SET
 from dotenv import load_dotenv
+from sqlalchemy import create_engine
 
 # Resources
 from tellr.resources.user import UserRegister, User, UserLogin, UserLogout, UserQuery

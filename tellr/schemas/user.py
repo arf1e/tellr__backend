@@ -16,5 +16,5 @@ class UserSchema(ModelSchema):
     age = Age(attribute="birthday")
     avatar = Avatar(attribute="id")
     lines = ma.Nested(
-        "LineSchema", many=True, exclude=("user", "user_id", "correct_id")
+        "LineSchema", many=True, exclude=("user", "user_id", "correct_id", "question.answers")
     )

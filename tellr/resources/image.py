@@ -37,12 +37,14 @@ class AvatarUpload(Resource):
                 return {"message": "avatar delete failed"}, 500
         try:
             ext = image_helper.get_extension(data["image"].filename)
+            if ext == "webp":
+                raise UploadNotAllowed
             avatar = str(filename) + ext
             avatar_path = image_helper.get_path(
                 image_helper.save_image(data["image"], folder=folder, name=avatar)
             )
             image_helper.resize(avatar_path)
-            return {"message": f"avatar uploaded, path is {avatar_path}"}, 200
+            return {"avatar": avatar_path.split("tellr")[1]}, 200
         except UploadNotAllowed:
             extension = image_helper.get_extension(data["image"])
             return {"message": f"'{extension}' is an incorrect extension"}, 500

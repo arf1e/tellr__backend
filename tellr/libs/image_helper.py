@@ -58,5 +58,7 @@ def get_extension(file):
 def resize(path):
     with open(path, "r+b") as f:
         with Image.open(f) as image:
-            img = resizeimage.resize_width(image, 300)
+            img = image
+            if (image.width >= 300):
+                img = resizeimage.resize_width(image, 300)
             img.save(path, image.format)
