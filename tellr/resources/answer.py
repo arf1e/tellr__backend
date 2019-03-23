@@ -12,7 +12,6 @@ class Answer(Resource):
         answer_json = request.get_json()
         answer = answer_schema.load(answer_json)
         duplicate = AnswerModel.find_by_content(answer_json["content"])
-        print(duplicate)
         if duplicate:
             return {"answer": answer_schema.dump(duplicate)}, 200
         try:

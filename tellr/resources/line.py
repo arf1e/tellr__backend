@@ -47,7 +47,7 @@ class Line(Resource):
         if line:
             return {"line": line_schema.dump(line)}, 200
         return {"message": "line was not found"}, 404
-    
+
     @classmethod
     @jwt_required
     def patch(cls, line_id):
@@ -60,8 +60,6 @@ class Line(Resource):
             user = UserModel.find_by_id(user_id)
             return {"lines": lines_list_schema.dump(user.lines)}, 200
         return {"message": "Line was not found on this user"}, 404
-        
-
 
 
 class Lines(Resource):

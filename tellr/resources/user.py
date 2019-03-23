@@ -13,6 +13,7 @@ from tellr.models.answer import AnswerModel
 from tellr.schemas.user import UserSchema
 from tellr.schemas.answer import AnswerSchema
 from tellr.blacklist import BLACKLIST
+from tellr.libs.passwords import encrypt_password, check_encrypted_password
 from datetime import date, datetime
 
 
@@ -29,6 +30,7 @@ class UserRegister(Resource):
         if "birthday" in user_json:
             bday = user_json["birthday"].split("-")
             user_json["birthday"] = f"{bday[2]}-{bday[1]}-{bday[0]}T00:00:00Z"
+            user_json["password"] = encrypt_password(user_json["password"])
         user_data = user_schema.load(user_json)
         user = user_data
 
@@ -46,7 +48,7 @@ class UserLogin(Resource):
 
         user_data = user_schema.load(user_json)
         user = UserModel.find_by_username(user_data.username)
-        if user and safe_str_cmp(user.password, user_data.password):
+        if user and check_encrypted_password(user_json["password"], user.password):
             access_token = create_access_token(identity=user.id, expires_delta=False)
             refresh_token = create_refresh_token(user.id)
             return (

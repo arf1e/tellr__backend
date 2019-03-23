@@ -23,8 +23,8 @@ class AnswerModel(Model):
 
     @classmethod
     def find_by_content(cls, _content):
-        return cls.query.filter(cls.content.like(_content)).first()
-        
+        return cls.query.filter(cls.content.ilike(_content)).first()
+
     @classmethod
     def find_by_id(cls, _id):
         return cls.query.filter_by(id=_id).first()

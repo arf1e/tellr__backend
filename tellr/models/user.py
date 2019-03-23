@@ -51,4 +51,3 @@ class UserModel(Model):
 
     def get_lines(self, user_id):
         return self.lines(user_id=user_id)
-    
