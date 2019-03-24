@@ -36,6 +36,7 @@ class UserTest(BaseTest):
                             "password": "sudobangbang",
                             "first_name": "Слава",
                             "sex": True,
+                            "birthday": "16-10-1997"
                         }
                     ),
                 )

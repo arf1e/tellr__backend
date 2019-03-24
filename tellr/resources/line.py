@@ -33,12 +33,13 @@ class Line(Resource):
     @classmethod
     @jwt_required
     def delete(cls, line_id):
-        line = LineModel.find_by_id(id)
+        line = LineModel.find_by_id(line_id)
         user_id = get_jwt_identity()
         line_json = line_schema.dump(line)
         if line_json["user_id"] == user_id:
-            LineModel.delete_from_db(line)
-            return {"message": "line was deleted"}, 200
+            line.delete_from_db()
+            user = UserModel.find_by_id(user_id)
+            return {"lines": lines_list_schema.dump(user.lines)}, 200
         return {"message": "Unauthorized"}, 401
 
     @classmethod

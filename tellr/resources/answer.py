@@ -11,7 +11,9 @@ class Answer(Resource):
     def post(self):
         answer_json = request.get_json()
         answer = answer_schema.load(answer_json)
-        duplicate = AnswerModel.find_by_content(answer_json["content"])
+        duplicate = AnswerModel.find_by_content(
+            answer_json["content"], answer_json["question_id"]
+        )
         if duplicate:
             return {"answer": answer_schema.dump(duplicate)}, 200
         try:
