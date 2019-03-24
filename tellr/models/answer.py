@@ -22,6 +22,12 @@ class AnswerModel(Model):
         db.session.commit()
 
     @classmethod
+    def find_by_content(cls, _content, _question_id):
+        return cls.query.filter(
+            cls.content.ilike(_content), cls.question_id == _question_id
+        ).first()
+
+    @classmethod
     def find_by_id(cls, _id):
         return cls.query.filter_by(id=_id).first()
 

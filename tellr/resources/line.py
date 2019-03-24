@@ -28,24 +28,39 @@ class LineCreate(Resource):
             return {"message": "Server Error"}, 500
         return line_schema.dump(line), 201
 
-class Line(Resource): 
+
+class Line(Resource):
     @classmethod
     @jwt_required
     def delete(cls, line_id):
-        line = LineModel.find_by_id(id)
+        line = LineModel.find_by_id(line_id)
         user_id = get_jwt_identity()
         line_json = line_schema.dump(line)
         if line_json["user_id"] == user_id:
-            LineModel.delete_from_db(line)
-            return {"message": "line was deleted"}, 200
-        return {"message": "Unauthorized" }, 401
-    
+            line.delete_from_db()
+            user = UserModel.find_by_id(user_id)
+            return {"lines": lines_list_schema.dump(user.lines)}, 200
+        return {"message": "Unauthorized"}, 401
+
     @classmethod
     def get(cls, line_id):
         line = LineModel.find_by_id(id)
-        if (line):
+        if line:
             return {"line": line_schema.dump(line)}, 200
         return {"message": "line was not found"}, 404
+
+    @classmethod
+    @jwt_required
+    def patch(cls, line_id):
+        line = LineModel.find_by_id(line_id)
+        user_id = get_jwt_identity()
+        updated = request.get_json()
+        if line and line.user_id == user_id:
+            line.correct_id = updated["correct_id"]
+            line.save_to_db()
+            user = UserModel.find_by_id(user_id)
+            return {"lines": lines_list_schema.dump(user.lines)}, 200
+        return {"message": "Line was not found on this user"}, 404
 
 
 class Lines(Resource):

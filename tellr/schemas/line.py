@@ -14,4 +14,4 @@ class LineSchema(ModelSchema):
         exclude = ("user",)
 
     correct = ma.Nested(AnswerSchema, exclude=("question_id",))
-    question = ma.Nested(QuestionSchema, exclude=("id", ))
+    question = ma.Nested(QuestionSchema, exclude=("answers",))

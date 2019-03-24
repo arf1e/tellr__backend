@@ -17,6 +17,7 @@ flask-uploads = "*"
 python-dotenv = "*"
 gunicorn = "*"
 python-resize-image = "*"
+passlib = "*"
 
 [dev-packages]
 pylint = "*"

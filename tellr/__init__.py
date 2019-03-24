@@ -7,6 +7,8 @@ from marshmallow import ValidationError
 from flask_uploads import configure_uploads, patch_request_class
 from tellr.libs.image_helper import IMAGE_SET
 from dotenv import load_dotenv
+from sqlalchemy import create_engine
+import os
 
 # Resources
 from tellr.resources.user import UserRegister, User, UserLogin, UserLogout, UserQuery
@@ -19,6 +21,10 @@ from tellr.resources.line import LineCreate, Line, Lines
 app = Flask(__name__)
 # Config
 app.config.from_object("tellr.default_config")
+load_dotenv("tellr/.env")
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
+    "DATABASE_URI", "sqlite:///data.db"
+)
 patch_request_class(app, 10 * 1024 * 1024)
 configure_uploads(app, IMAGE_SET)
 api = Api(app)
