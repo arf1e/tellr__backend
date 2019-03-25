@@ -5,6 +5,7 @@ from datetime import date
 from tellr.utils import calculate_age
 from sqlalchemy.sql.expression import func, select
 from tellr.models.line import LineModel
+from tellr.models.decision import DecisionModel
 
 
 class UserModel(Model):
@@ -21,6 +22,8 @@ class UserModel(Model):
     first_name = db.Column(db.String)
     birthday = db.Column(db.DateTime, default=date(1997, 10, 16))
     lines = db.relationship("LineModel", lazy="dynamic")
+    hated = db.relationship("DecisionModel", primaryjoin="and_(UserModel.id==DecisionModel.user_id, " "DecisionModel.hate==True)")
+    loved = db.relationship("DecisionModel", primaryjoin="and_(UserModel.id==DecisionModel.user_id, " "DecisionModel.hate==False)")
 
     # Essential db methods
     def save_to_db(self):
@@ -43,11 +46,19 @@ class UserModel(Model):
     # fetch random users
     @classmethod
     def find_males(cls):
-        return cls.query.filter_by(sex=True).order_by(func.random()).limit(4)
+        return (
+            cls.query.filter(cls.sex == True, cls.lines != None)
+            .order_by(func.random())
+            .limit(4)
+        )
 
     @classmethod
     def find_females(cls):
-        return cls.query.filter_by(sex=False).order_by(func.random()).limit(4)
+        return (
+            cls.query.filter(cls.sex == False, cls.lines != None)
+            .order_by(func.random())
+            .limit(4)
+        )
 
     def get_lines(self, user_id):
         return self.lines(user_id=user_id)

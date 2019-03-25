@@ -36,4 +36,6 @@ class RequestModel(Model):
 
     @classmethod
     def find_existing(cls, asker_id, receiver_id):
-      return cls.query.filter(cls.asker_id == asker_id, cls.receiver_id == receiver_id).first()
+        return cls.query.filter(
+            cls.asker_id == asker_id, cls.receiver_id == receiver_id
+        ).first()

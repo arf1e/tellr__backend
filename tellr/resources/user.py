@@ -15,10 +15,12 @@ from flask_jwt_extended import (
 from tellr.models.user import UserModel
 from tellr.models.answer import AnswerModel
 from tellr.models.request import RequestModel
+
 # schemas
 from tellr.schemas.user import UserSchema
 from tellr.schemas.answer import AnswerSchema
 from tellr.schemas.request import RequestSchema
+
 # stuff
 from tellr.blacklist import BLACKLIST
 from tellr.libs.passwords import encrypt_password, check_encrypted_password
@@ -104,9 +106,7 @@ class User(Resource):
         request_input["receiver_id"] = user_id
         req = request_schema.load(request_input)
         req.save_to_db()
-        return {
-            "request": request_schema.dump(req)
-        }, 200
+        return {"request": request_schema.dump(req)}, 200
 
 
 class UserLogout(Resource):
