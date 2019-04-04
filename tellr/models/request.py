@@ -1,8 +1,9 @@
 from tellr.db import db
 from sqlalchemy.sql.expression import func, select
+from tellr.models.guess import GuessModel
+import sqlalchemy
 
 Model = db.Model
-
 
 class RequestModel(Model):
 
@@ -10,8 +11,11 @@ class RequestModel(Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
+    name = db.Column(db.String)
+    age = db.Column(db.Integer)
     asker_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     receiver_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    guesses = db.relationship("GuessModel", lazy="dynamic", uselist=True, cascade="all")
     accepted = db.Column(db.Boolean, unique=False, default=False)
 
     def save_to_db(self):
@@ -39,3 +43,7 @@ class RequestModel(Model):
         return cls.query.filter(
             cls.asker_id == asker_id, cls.receiver_id == receiver_id
         ).first()
+    
+    @classmethod
+    def find_all(cls):
+        return cls.query.all()

@@ -21,8 +21,12 @@ class TopicModel(Model):
         db.session.commit()
 
     @classmethod
-    def find_by_id(id):
+    def find_by_id(cls, id):
         return cls.query.filter_by(id=id).first()
+
+    @classmethod
+    def get_topics(cls, list):
+        return cls.query.filter(~(cls.id.in_(list))).limit(4)
 
     @classmethod
     def find_all(cls):

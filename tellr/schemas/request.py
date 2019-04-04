@@ -16,12 +16,6 @@ class RequestSchema(ModelSchema):
     class Meta:
         model = RequestModel
         include_fk = True
+        dump_only = ("guesses",)
 
-    name = fields.String(required=True)
-    age = fields.Integer(required=True)
-    guesses = fields.Nested(
-        GuessSchema,
-        validate=validate.Length(min=1, error="No empty lists allowed"),
-        many=True,
-        required=True,
-    )
+    guesses = ma.Nested(GuessSchema, many=True, exclude=("request_id", "id"))

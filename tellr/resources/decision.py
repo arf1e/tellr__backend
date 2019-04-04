@@ -14,7 +14,6 @@ decision_list_schema = DecisionSchema(many=True)
 
 
 class Decision(Resource):
-
     @classmethod
     @jwt_required
     def post(self, topic_id):

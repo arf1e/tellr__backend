@@ -19,11 +19,10 @@ class AvatarUpload(Resource):
     @jwt_required
     def put(cls):
         """
-    Resource used to upload user avatars.
-    This method should be idempotent, meaning uploading a new avatar
-    overwrites the previous one.
-    """
-
+        Resource used to upload user avatars.
+        This method should be idempotent, meaning uploading a new avatar
+        overwrites the previous one.
+        """
         data = image_schema.load(request.files)
         user_id = get_jwt_identity()
         filename = uuid.uuid3(uuid.NAMESPACE_DNS, f"user_{user_id}")
@@ -53,6 +52,9 @@ class AvatarUpload(Resource):
 class Avatar(Resource):
     @classmethod
     def get(cls, user_id: int):
+        """
+        Resource that sends avatar of given user.
+        """
         folder = "avatars"
         filename = uuid.uuid3(uuid.NAMESPACE_DNS, f"user_{user_id}")
         avatar = image_helper.find_image_any_format(str(filename), folder)
