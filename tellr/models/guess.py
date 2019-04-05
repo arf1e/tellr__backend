@@ -10,6 +10,8 @@ class GuessModel(Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
+    request_id = db.Column(db.Integer, db.ForeignKey("requests.id"), nullable=False)
+
     question_id = db.Column(db.Integer, db.ForeignKey("questions.id"), nullable=False)
     correct_id = db.Column(db.Integer, db.ForeignKey("answers.id"), nullable=False)
     answer_id = db.Column(db.Integer, db.ForeignKey("answers.id"), nullable=False)
@@ -22,6 +24,7 @@ class GuessModel(Model):
         db.session.delete(self)
         db.session.commit()
 
+        
     @classmethod
     def find_by_id(cls, _id):
         return cls.query.filter_by(id=_id).first()

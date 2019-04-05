@@ -15,13 +15,19 @@ from flask_jwt_extended import (
 from tellr.models.user import UserModel
 from tellr.models.answer import AnswerModel
 from tellr.models.request import RequestModel
+from tellr.models.contact import ContactModel
+from tellr.models.guess import GuessModel
+
 # schemas
 from tellr.schemas.user import UserSchema
 from tellr.schemas.answer import AnswerSchema
-from tellr.schemas.request import RequestSchema
+from tellr.schemas.request import RequestSchema, GuessSchema
+from tellr.schemas.contact import ContactSchema
+
 # stuff
 from tellr.blacklist import BLACKLIST
 from tellr.libs.passwords import encrypt_password, check_encrypted_password
+from tellr.db import db
 
 
 user_schema = UserSchema()
@@ -29,6 +35,12 @@ user_list_schema = UserSchema(many=True)
 answer_schema = AnswerSchema()
 answer_list_schema = AnswerSchema(many=True)
 request_schema = RequestSchema()
+contact_schema = ContactSchema()
+contact_list_schema = ContactSchema(many=True)
+guess_schema = GuessSchema()
+guess_list_schema = GuessSchema(many=True)
+
+DATABASE_ERROR = "Database error"
 
 
 class UserRegister(Resource):
@@ -45,7 +57,10 @@ class UserRegister(Resource):
         if UserModel.find_by_username(user.username):
             return {"msg": "user exists"}, 400
 
-        user.save_to_db()
+        try:
+            user.save_to_db()
+        except:
+            return {"message": DATABASE_ERROR}, 500
         return {"msg": "user created"}, 201
 
 
@@ -99,14 +114,88 @@ class User(Resource):
         user = UserModel.find_by_id(user_id)
         asker_id = get_jwt_identity()
         duplicate = RequestModel.find_existing(asker_id, user_id)
-        request_input = request.get_json()
-        request_input["asker_id"] = asker_id
-        request_input["receiver_id"] = user_id
-        req = request_schema.load(request_input)
+        if duplicate:
+            return {"message": "request exists"}, 200
+        req_input = request.get_json()
+        req_input["asker_id"] = asker_id
+        req_input["receiver_id"] = user_id
+        guesses_json = req_input.pop("guesses", None)
+        print(req_input)
+        req = request_schema.load(req_input)
+        match = RequestModel.find_existing(user_id, asker_id)
+        if match:
+            match.accepted = True
+            req.accepted = True
+            try:
+                match.save_to_db()
+            except:
+                return {"message": DATABASE_ERROR}, 500
         req.save_to_db()
-        return {
-            "request": request_schema.dump(req)
-        }, 200
+        for guess in guesses_json:
+            guess["request_id"] = req.id
+            guess_schema.load(guess).save_to_db()
+        if match:
+            if (user.sex == False):
+                contact = contact_schema.load({
+                    "boy_id": asker_id,
+                    "girl_id": user_id,
+                    "boy_request": req.id,
+                    "girl_request": match.id
+                })
+                try:
+                    contact.save_to_db()
+                except: 
+                    return {"message": DATABASE_ERROR}, 500
+                return {"message": "contact created"}, 201
+            else:
+                contact = contact_schema.load({
+                    "boy_id": user_id,
+                    "girl_id": asker_id,
+                    "boy_request": match.id,
+                    "girl_request": req.id
+                })
+                try:
+                    contact.save_to_db()
+                except:
+                    return {"message": DATABASE_ERROR}, 500
+                return {"message": "contact created"}, 200
+        return {"request": request_schema.dump(req)}, 201
+        # =========================================
+        # request_input = request.get_json()
+        # request_input["asker_id"] = asker_id
+        # request_input["receiver_id"] = user_id
+        # req = request_schema.load(request_input)
+        # if match:
+        #     req.accepted = True
+        #     try:
+        #         req.save_to_db()
+        #     except:
+        #         return {"message": DATABASE_ERROR}, 500
+        #     print(req)
+        #     match.accepted = True
+        #     if user.sex == False:
+        #         contact = contact_schema.load(
+        #             {
+        #                 "boy_id": asker_id,
+        #                 "girl_id": user_id,
+        #                 "boy_request": req.id,
+        #                 "girl_request": match.id,
+        #             }
+        #         )
+        #         try:
+        #             contact.save_to_db()
+        #         except:
+        #             return {"message": DATABASE_ERROR}, 500
+        #     try:
+        #         match.save_to_db()
+        #     except:
+        #         return {"message": DATABASE_ERROR}, 500
+        #     return {"msg": "friend request"}, 200
+        # try:
+        #     req.save_to_db()
+        # except:
+        #     return {"message": DATABASE_ERROR}, 500
+        # return {"request": request_schema.dump(req)}, 201
 
 
 class UserLogout(Resource):
@@ -114,7 +203,7 @@ class UserLogout(Resource):
     @jwt_required
     def post(cls):
         print(get_raw_jwt()["jti"])
-        jti = get_raw_jwt()["jti"]  # jti is "JWT ID", unique identifier for JWT.
+        jti = get_raw_jwt()["jti"]
         user_id = get_jwt_identity()
         BLACKLIST.add(jti)
         return {"message": f"User <id={user_id}> has logged out"}, 200
@@ -128,10 +217,21 @@ class UserQuery(Resource):
         user_id = get_jwt_identity()
         user_data = UserModel.find_by_id(user_id)
         user = user_schema.dump(user_data)
+        friends = []
+        print(user["outvoices"] + friends)
+        for contact in user["contacts"]:
+            if user["sex"] == True:
+                friends.append(contact["girl_id"])
+            else:
+                friends.append(contact["boy_id"])
         if user["sex"] == True:
-            users = user_list_schema.dump(UserModel.find_females())
+            users = user_list_schema.dump(
+                UserModel.find_females(user["outvoices"] + friends)
+            )
         else:
-            users = user_list_schema.dump(UserModel.find_males())
+            users = user_list_schema.dump(
+                UserModel.find_males(user["outvoices"] + friends)
+            )
         for user in users:
             for line in user["lines"]:
                 # [users].len is always 4, so O(n^2) here is no big deal

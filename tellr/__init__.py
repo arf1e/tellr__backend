@@ -16,6 +16,10 @@ from tellr.resources.image import AvatarUpload, Avatar
 from tellr.resources.question import Question, Questions
 from tellr.resources.answer import Answer
 from tellr.resources.line import LineCreate, Line, Lines
+from tellr.resources.topic import Topic
+from tellr.resources.decision import Decision
+from tellr.resources.requests import Requests, Request
+from tellr.resources.contacts import ContactList, Contact 
 
 # App instance
 app = Flask(__name__)
@@ -65,3 +69,9 @@ api.add_resource(Answer, "/answer")
 api.add_resource(LineCreate, "/line")
 api.add_resource(Line, "/line/<int:line_id>")
 api.add_resource(Lines, "/lines")
+api.add_resource(Topic, "/topics")
+api.add_resource(Decision, "/topic/<int:topic_id>")
+api.add_resource(Requests, "/requests")
+api.add_resource(Request, "/requests/<int:req_id>")
+api.add_resource(ContactList, "/contacts")
+api.add_resource(Contact, "/contacts/<int:contact_id>")
