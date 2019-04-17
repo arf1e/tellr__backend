@@ -1,3 +1,4 @@
+import os
 from flask import Flask, jsonify
 from flask_restplus import Api
 from flask_jwt_extended import JWTManager
@@ -8,18 +9,19 @@ from flask_uploads import configure_uploads, patch_request_class
 from tellr.libs.image_helper import IMAGE_SET
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
-import os
+from flask_migrate import Migrate
 
 # Resources
 from tellr.resources.user import UserRegister, User, UserLogin, UserLogout, UserQuery
 from tellr.resources.image import AvatarUpload, Avatar
-from tellr.resources.question import Question, Questions
+from tellr.resources.question import Question, Questions, FullQuestion
 from tellr.resources.answer import Answer
 from tellr.resources.line import LineCreate, Line, Lines
 from tellr.resources.topic import Topic
 from tellr.resources.decision import Decision
 from tellr.resources.requests import Requests, Request
-from tellr.resources.contacts import ContactList, Contact 
+from tellr.resources.contacts import ContactList, Contact
+from tellr.resources.self import Self
 
 # App instance
 app = Flask(__name__)
@@ -34,6 +36,7 @@ configure_uploads(app, IMAGE_SET)
 api = Api(app)
 
 jwt = JWTManager(app)
+migrate = Migrate(app, db)
 
 
 @jwt.token_in_blacklist_loader
@@ -65,6 +68,7 @@ api.add_resource(AvatarUpload, "/upload/avatar")
 api.add_resource(Avatar, "/avatar/<int:user_id>")
 api.add_resource(Question, "/question")
 api.add_resource(Questions, "/questions")
+api.add_resource(FullQuestion, "/questions/<int:question_id>")
 api.add_resource(Answer, "/answer")
 api.add_resource(LineCreate, "/line")
 api.add_resource(Line, "/line/<int:line_id>")
@@ -75,3 +79,4 @@ api.add_resource(Requests, "/requests")
 api.add_resource(Request, "/requests/<int:req_id>")
 api.add_resource(ContactList, "/contacts")
 api.add_resource(Contact, "/contacts/<int:contact_id>")
+api.add_resource(Self, "/user/self")

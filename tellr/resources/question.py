@@ -20,3 +20,11 @@ class Questions(Resource):
     def get(self):
         questions = question_list_schema.dump(QuestionModel.get_questions())
         return {"questions": questions}, 200
+
+
+class FullQuestion(Resource):
+    def get(self, question_id):
+        question = QuestionModel.find_by_id(question_id)
+        if question:
+            return {"question": question_schema.dump(question)}
+        return {"message": "question was not found"}, 404

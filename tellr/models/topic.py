@@ -10,6 +10,7 @@ class TopicModel(Model):
     id = db.Column(db.Integer, primary_key=True)
 
     title = db.Column(db.String(30), unique=True, nullable=False)
+    passive = db.Column(db.String(30), unique=True, nullable=False)
     gif = db.Column(db.String, unique=True, nullable=False)
 
     def save_to_db(self):

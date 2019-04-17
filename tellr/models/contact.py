@@ -10,8 +10,9 @@ class ContactModel(Model):
     id = db.Column(db.Integer, primary_key=True)
 
     boy_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    boy = db.relationship("UserModel", primaryjoin=("UserModel.id==ContactModel.boy_id"))
     girl_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-
+    girl = db.relationship("UserModel", primaryjoin=("UserModel.id==ContactModel.girl_id"))
     boy_request = db.Column(db.Integer, db.ForeignKey("requests.id"), nullable=False)
     girl_request = db.Column(db.Integer, db.ForeignKey("requests.id"), nullable=False)
 
@@ -32,7 +33,7 @@ class ContactModel(Model):
     @classmethod
     def find_by_id(cls, _id):
         return cls.query.filter_by(id=_id).first()
-    
+
     @classmethod
     def find_all(cls):
         return cls.query.all()

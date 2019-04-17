@@ -18,6 +18,7 @@ python-dotenv = "*"
 gunicorn = "*"
 python-resize-image = "*"
 passlib = "*"
+flask-migrate = "*"
 
 [dev-packages]
 pylint = "*"
