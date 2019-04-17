@@ -5,6 +5,7 @@ import sqlalchemy
 
 Model = db.Model
 
+
 class RequestModel(Model):
 
     __tablename__ = "requests"
@@ -43,7 +44,7 @@ class RequestModel(Model):
         return cls.query.filter(
             cls.asker_id == asker_id, cls.receiver_id == receiver_id
         ).first()
-    
+
     @classmethod
     def find_all(cls):
         return cls.query.all()

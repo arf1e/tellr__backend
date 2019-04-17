@@ -135,25 +135,29 @@ class User(Resource):
             guess["request_id"] = req.id
             guess_schema.load(guess).save_to_db()
         if match:
-            if (user.sex == False):
-                contact = contact_schema.load({
-                    "boy_id": asker_id,
-                    "girl_id": user_id,
-                    "boy_request": req.id,
-                    "girl_request": match.id
-                })
+            if user.sex == False:
+                contact = contact_schema.load(
+                    {
+                        "boy_id": asker_id,
+                        "girl_id": user_id,
+                        "boy_request": req.id,
+                        "girl_request": match.id,
+                    }
+                )
                 try:
                     contact.save_to_db()
-                except: 
+                except:
                     return {"message": DATABASE_ERROR}, 500
                 return {"message": "contact created"}, 201
             else:
-                contact = contact_schema.load({
-                    "boy_id": user_id,
-                    "girl_id": asker_id,
-                    "boy_request": match.id,
-                    "girl_request": req.id
-                })
+                contact = contact_schema.load(
+                    {
+                        "boy_id": user_id,
+                        "girl_id": asker_id,
+                        "boy_request": match.id,
+                        "girl_request": req.id,
+                    }
+                )
                 try:
                     contact.save_to_db()
                 except:
