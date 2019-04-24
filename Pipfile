@@ -19,6 +19,7 @@ gunicorn = "*"
 python-resize-image = "*"
 passlib = "*"
 flask-migrate = "*"
+flask-socketio = "*"
 
 [dev-packages]
 pylint = "*"

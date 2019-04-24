@@ -13,8 +13,13 @@ class GuessModel(Model):
     request_id = db.Column(db.Integer, db.ForeignKey("requests.id"), nullable=False)
 
     question_id = db.Column(db.Integer, db.ForeignKey("questions.id"), nullable=False)
+    question = db.relationship("QuestionModel")
+
     correct_id = db.Column(db.Integer, db.ForeignKey("answers.id"), nullable=False)
+    correct = db.relationship("AnswerModel", primaryjoin="GuessModel.correct_id==AnswerModel.id")
+
     answer_id = db.Column(db.Integer, db.ForeignKey("answers.id"), nullable=False)
+    answer = db.relationship("AnswerModel", primaryjoin="GuessModel.answer_id==AnswerModel.id")
 
     def save_to_db(self):
         db.session.add(self)
