@@ -12,14 +12,16 @@ class GuessSchema(ModelSchema):
         include_fk = True
         exclude = ("correct", "answer", "question")
 
+
 class GuessExtendedSchema(ModelSchema):
     class Meta:
         model = GuessModel
         include_fk = True
+
     correct = ma.Nested("AnswerSchema", exclude=("id", "question_id"))
     answer = ma.Nested("AnswerSchema", exclude=("id", "question_id"))
     question = ma.Nested("QuestionSchema", only=("content",))
-    
+
 
 class RequestSchema(ModelSchema):
     class Meta:
@@ -28,6 +30,7 @@ class RequestSchema(ModelSchema):
         dump_only = ("guesses",)
 
     guesses = ma.Nested(GuessSchema, many=True, exclude=("request_id", "id"))
+
 
 class RequestExtendedSchema(ModelSchema):
     class Meta:

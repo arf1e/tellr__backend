@@ -7,6 +7,7 @@ from tellr.schemas.user import UserSchema
 
 user_schema = UserSchema()
 
+
 class Self(Resource):
     @classmethod
     @jwt_required
@@ -14,7 +15,7 @@ class Self(Resource):
         user_id = get_jwt_identity()
         user = UserModel.find_by_id(user_id)
         return {"user": user_schema.dump(user)}, 200
-    
+
     @classmethod
     @jwt_required
     def patch(cls):
@@ -32,6 +33,4 @@ class Self(Resource):
             user.save_to_db()
             return {"user": user_schema.dump(user)}, 200
         except:
-            return {"message": "Database error"},500
-        
-
+            return {"message": "Database error"}, 500

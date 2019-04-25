@@ -120,7 +120,6 @@ class User(Resource):
         req_input["asker_id"] = asker_id
         req_input["receiver_id"] = user_id
         guesses_json = req_input.pop("guesses", None)
-        print(req_input)
         req = request_schema.load(req_input)
         match = RequestModel.find_existing(user_id, asker_id)
         if match:
@@ -130,7 +129,10 @@ class User(Resource):
                 match.save_to_db()
             except:
                 return {"message": DATABASE_ERROR}, 500
-        req.save_to_db()
+        try:
+            req.save_to_db()
+        except:
+            return {"message": DATABASE_ERROR}, 500
         for guess in guesses_json:
             guess["request_id"] = req.id
             guess_schema.load(guess).save_to_db()
@@ -140,8 +142,8 @@ class User(Resource):
                     {
                         "boy_id": asker_id,
                         "girl_id": user_id,
-                        "boy_request": req.id,
-                        "girl_request": match.id,
+                        "boy_request_id": req.id,
+                        "girl_request_id": match.id,
                     }
                 )
                 try:
@@ -154,52 +156,16 @@ class User(Resource):
                     {
                         "boy_id": user_id,
                         "girl_id": asker_id,
-                        "boy_request": match.id,
-                        "girl_request": req.id,
+                        "boy_request_id": match.id,
+                        "girl_request_id": req.id,
                     }
                 )
                 try:
                     contact.save_to_db()
                 except:
                     return {"message": DATABASE_ERROR}, 500
-                return {"message": "contact created"}, 200
+                return {"message": "contact created"}, 201
         return {"request": request_schema.dump(req)}, 201
-        # =========================================
-        # request_input = request.get_json()
-        # request_input["asker_id"] = asker_id
-        # request_input["receiver_id"] = user_id
-        # req = request_schema.load(request_input)
-        # if match:
-        #     req.accepted = True
-        #     try:
-        #         req.save_to_db()
-        #     except:
-        #         return {"message": DATABASE_ERROR}, 500
-        #     print(req)
-        #     match.accepted = True
-        #     if user.sex == False:
-        #         contact = contact_schema.load(
-        #             {
-        #                 "boy_id": asker_id,
-        #                 "girl_id": user_id,
-        #                 "boy_request": req.id,
-        #                 "girl_request": match.id,
-        #             }
-        #         )
-        #         try:
-        #             contact.save_to_db()
-        #         except:
-        #             return {"message": DATABASE_ERROR}, 500
-        #     try:
-        #         match.save_to_db()
-        #     except:
-        #         return {"message": DATABASE_ERROR}, 500
-        #     return {"msg": "friend request"}, 200
-        # try:
-        #     req.save_to_db()
-        # except:
-        #     return {"message": DATABASE_ERROR}, 500
-        # return {"request": request_schema.dump(req)}, 201
 
 
 class UserLogout(Resource):
