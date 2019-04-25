@@ -1,10 +1,10 @@
 from flask_restplus import Resource
 from tellr.models.contact import ContactModel
-from tellr.schemas.contact import ContactSchema
+from tellr.schemas.contact import ContactSchema, ContactExtendedSchema
 
 contact_schema = ContactSchema()
 contact_list_schema = ContactSchema(many=True)
-
+contact_extended_schema = ContactExtendedSchema()
 
 class ContactList(Resource):
     @classmethod
@@ -18,7 +18,7 @@ class Contact(Resource):
     def get(cls, contact_id):
         contact = ContactModel.find_by_id(contact_id)
         if contact:
-            return {"contact": contact_schema.dump(contact)}, 200
+            return {"contact": contact_extended_schema.dump(contact)}, 200
         return {"message": "contact was not found"}, 404
 
     @classmethod

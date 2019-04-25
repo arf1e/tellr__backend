@@ -15,13 +15,13 @@ class Requests(Resource):
 
 
 class Request(Resource):
-    @classmethod 
+    @classmethod
     def get(cls, req_id):
         request = RequestModel.find_by_id(req_id)
         if request:
             return {"request": request_extended_schema.dump(request)}, 200
         return {"message": "request was not found"}, 404
-        
+
     @classmethod
     def delete(cls, req_id):
         request = RequestModel.find_by_id(req_id)

@@ -10,11 +10,25 @@ class ContactModel(Model):
     id = db.Column(db.Integer, primary_key=True)
 
     boy_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    boy = db.relationship("UserModel", primaryjoin=("UserModel.id==ContactModel.boy_id"))
+    boy = db.relationship(
+        "UserModel", primaryjoin=("UserModel.id==ContactModel.boy_id")
+    )
     girl_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    girl = db.relationship("UserModel", primaryjoin=("UserModel.id==ContactModel.girl_id"))
-    boy_request = db.Column(db.Integer, db.ForeignKey("requests.id"), nullable=False)
-    girl_request = db.Column(db.Integer, db.ForeignKey("requests.id"), nullable=False)
+    girl = db.relationship(
+        "UserModel", primaryjoin=("UserModel.id==ContactModel.girl_id")
+    )
+
+    boy_request_id = db.Column(db.Integer, db.ForeignKey("requests.id"), nullable=False)
+    boy_request = db.relationship(
+        "RequestModel", primaryjoin=("ContactModel.boy_request_id==RequestModel.id")
+    )
+
+    girl_request_id = db.Column(
+        db.Integer, db.ForeignKey("requests.id"), nullable=False
+    )
+    girl_request = db.relationship(
+        "RequestModel", primaryjoin=("ContactModel.girl_request_id==RequestModel.id")
+    )
 
     def save_to_db(self):
         db.session.add(self)
