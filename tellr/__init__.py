@@ -22,6 +22,7 @@ from tellr.resources.decision import Decision
 from tellr.resources.requests import Requests, Request
 from tellr.resources.contacts import ContactList, Contact
 from tellr.resources.self import Self
+from tellr.resources.pusher import PusherAuth
 
 # App instance
 app = Flask(__name__)
@@ -55,8 +56,11 @@ def create_tables():
 
 
 from tellr.db import db
-
 db.init_app(app)
+
+
+from tellr.pusher import pusher_client
+pusher_client.trigger("private-arf1e", "my-event", {"message": "hello world"})
 
 
 api.add_resource(UserRegister, "/register")
@@ -80,3 +84,4 @@ api.add_resource(Request, "/requests/<int:req_id>")
 api.add_resource(ContactList, "/contacts")
 api.add_resource(Contact, "/contacts/<int:contact_id>")
 api.add_resource(Self, "/user/self")
+api.add_resource(PusherAuth, "/pusher/auth")
