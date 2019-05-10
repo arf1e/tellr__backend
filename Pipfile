@@ -20,6 +20,7 @@ python-resize-image = "*"
 passlib = "*"
 flask-migrate = "*"
 flask-socketio = "*"
+pusher = "*"
 
 [dev-packages]
 pylint = "*"

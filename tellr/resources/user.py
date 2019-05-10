@@ -28,7 +28,7 @@ from tellr.schemas.contact import ContactSchema
 from tellr.blacklist import BLACKLIST
 from tellr.libs.passwords import encrypt_password, check_encrypted_password
 from tellr.db import db
-
+from tellr.pusher import pusher_client
 
 user_schema = UserSchema()
 user_list_schema = UserSchema(many=True)
@@ -100,27 +100,24 @@ class User(Resource):
             )
         return user_output, 200
 
-    # @classmethod
-    # def delete(cls, user_id):
-    #     user = UserModel.find_by_id(user_id)
-    #     if not user:
-    #         return {"msg": "user not found"}, 404
-    #     user.delete_from_db()
-    #     return {"msg": "user has been deleted"}, 200
-
     @classmethod
     @jwt_required
     def post(cls, user_id):
+        # Получить ид юзеров, участвующих в создании контакта
         user = UserModel.find_by_id(user_id)
         asker_id = get_jwt_identity()
+        # Проверить, не существует ли уже такого реквеста
         duplicate = RequestModel.find_existing(asker_id, user_id)
         if duplicate:
             return {"message": "request exists"}, 200
+        # Создаём новый реквест
         req_input = request.get_json()
         req_input["asker_id"] = asker_id
         req_input["receiver_id"] = user_id
+        # Убираем из него гессы, их будем сохранять в базу отдельно
         guesses_json = req_input.pop("guesses", None)
         req = request_schema.load(req_input)
+        # Проверяем на мэтч (существующий реквест в обратную сторону)
         match = RequestModel.find_existing(user_id, asker_id)
         if match:
             match.accepted = True
@@ -129,14 +126,21 @@ class User(Resource):
                 match.save_to_db()
             except:
                 return {"message": DATABASE_ERROR}, 500
+        # Сохраняем реквест в базу, чтобы иметь доступ к его айдишнику
         try:
             req.save_to_db()
         except:
             return {"message": DATABASE_ERROR}, 500
+        # Сохраняем в базу гессы, которые были убраны из json на строке 118
         for guess in guesses_json:
             guess["request_id"] = req.id
             guess_schema.load(guess).save_to_db()
+        # На этом этапе у нас есть реквест, содержащий внутри себя гессы, всё это уже сохранено в базе.
+        # Если есть ответный реквест (который мы искали на строке 121), а то есть мэтч,
+        # нужно создать контакт между этими двумя пользователями.
         if match:
+            # Контакт содержит в себе необходимые поля boy_id, girl_id, boy_request_id, girl_request_id,
+            # которые нам нужно заполнить в зависимости от пола пользователя.
             if user.sex == False:
                 contact = contact_schema.load(
                     {
@@ -150,6 +154,7 @@ class User(Resource):
                     contact.save_to_db()
                 except:
                     return {"message": DATABASE_ERROR}, 500
+                pusher_client.trigger([f'private-{contact.boy_id}', f'private-{contact.girl_id}'], 'new-contact', {"contact": contact_schema.dump(contact)})
                 return {"message": "contact created"}, 201
             else:
                 contact = contact_schema.load(
@@ -164,6 +169,7 @@ class User(Resource):
                     contact.save_to_db()
                 except:
                     return {"message": DATABASE_ERROR}, 500
+                pusher_client.trigger([f'private-{contact.boy_id}', f'private-{contact.girl_id}'], 'new-contact', {"contact": contact_schema.dump(contact)})
                 return {"message": "contact created"}, 201
         return {"request": request_schema.dump(req)}, 201
 

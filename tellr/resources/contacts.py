@@ -6,6 +6,7 @@ contact_schema = ContactSchema()
 contact_list_schema = ContactSchema(many=True)
 contact_extended_schema = ContactExtendedSchema()
 
+
 class ContactList(Resource):
     @classmethod
     def get(cls):
