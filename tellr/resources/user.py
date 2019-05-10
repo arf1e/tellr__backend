@@ -28,7 +28,7 @@ from tellr.schemas.contact import ContactSchema
 from tellr.blacklist import BLACKLIST
 from tellr.libs.passwords import encrypt_password, check_encrypted_password
 from tellr.db import db
-
+from tellr.pusher import pusher_client
 
 user_schema = UserSchema()
 user_list_schema = UserSchema(many=True)
@@ -154,6 +154,7 @@ class User(Resource):
                     contact.save_to_db()
                 except:
                     return {"message": DATABASE_ERROR}, 500
+                pusher_client.trigger([f'private-{contact.boy_id}', f'private-{contact.girl_id}'], 'new-contact', {"contact": contact_schema.dump(contact)})
                 return {"message": "contact created"}, 201
             else:
                 contact = contact_schema.load(
@@ -168,6 +169,7 @@ class User(Resource):
                     contact.save_to_db()
                 except:
                     return {"message": DATABASE_ERROR}, 500
+                pusher_client.trigger([f'private-{contact.boy_id}', f'private-{contact.girl_id}'], 'new-contact', {"contact": contact_schema.dump(contact)})
                 return {"message": "contact created"}, 201
         return {"request": request_schema.dump(req)}, 201
 
