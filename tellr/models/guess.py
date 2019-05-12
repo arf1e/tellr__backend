@@ -36,3 +36,7 @@ class GuessModel(Model):
     @classmethod
     def find_by_id(cls, _id):
         return cls.query.filter_by(id=_id).first()
+    
+    def save_multiple(objects):
+        db.session.bulk_save_objects(objects)
+        db.session.commit()

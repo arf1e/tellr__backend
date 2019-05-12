@@ -1,4 +1,5 @@
 from tellr.db import db
+from sqlalchemy.sql import func
 
 Model = db.Model
 
@@ -29,6 +30,7 @@ class ContactModel(Model):
     girl_request = db.relationship(
         "RequestModel", primaryjoin=("ContactModel.girl_request_id==RequestModel.id")
     )
+    date_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     def save_to_db(self):
         db.session.add(self)

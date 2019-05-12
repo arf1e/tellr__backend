@@ -55,12 +55,7 @@ def create_tables():
     db.create_all()
 
 
-from tellr.db import db
 db.init_app(app)
-
-
-from tellr.pusher import pusher_client
-pusher_client.trigger("private-arf1e", "my-event", {"message": "hello world"})
 
 
 api.add_resource(UserRegister, "/register")
