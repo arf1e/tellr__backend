@@ -1,20 +1,16 @@
 from tellr.db import db
-from tellr.models.question_category import QuestionCategoryModel
+
 Model = db.Model
 
 
-class QuestionModel(Model):
+class QuestionCategoryModel(Model):
 
-    __tablename__ = "questions"
+    __tablename__ = "question_categories"
 
     id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(50), nullable=False, unique=True)
-    answers = db.relationship("AnswerModel", lazy="dynamic", uselist=True)
+    title = db.Column(db.String(20), nullable=False, unique=True)
 
-    category_id = db.Column(
-        db.Integer, db.ForeignKey("question_categories.id"), nullable=False
-    )
-    category = db.relationship("QuestionCategoryModel")
+    questions = db.relationship("QuestionModel", lazy="dynamic", uselist=True)
 
     def save_to_db(self):
         db.session.add(self)

@@ -173,6 +173,7 @@ class User(Resource):
             return {"message": "contact created"}, 201
         return {"request": request_schema.dump(req)}, 201
 
+
 class UserLogout(Resource):
     @classmethod
     @jwt_required

@@ -20,7 +20,7 @@ class GuessExtendedSchema(ModelSchema):
 
     correct = ma.Nested("AnswerSchema", exclude=("id", "question_id"))
     answer = ma.Nested("AnswerSchema", exclude=("id", "question_id"))
-    question = ma.Nested("QuestionSchema", only=("content", ))
+    question = ma.Nested("QuestionSchema", only=("content",))
 
 
 class RequestSchema(ModelSchema):

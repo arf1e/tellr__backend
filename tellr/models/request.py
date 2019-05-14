@@ -1,9 +1,20 @@
 from tellr.db import db
 from sqlalchemy.sql.expression import func, select
 from tellr.models.guess import GuessModel
+from tellr.models.badge import BadgeModel
 import sqlalchemy
 
 Model = db.Model
+
+class BadgesInRequest(Model):
+    __tablename__ = "badges_in_request"
+
+    id = db.Column(db.Integer, primary_key=True)
+    badge_id = db.Column(db.Integer, db.ForeignKey("badges.id"))
+    order_id = db.Column(db.Integer, db.ForeignKey("requests.id"))
+
+    badge = db.relationship("BadgeModel")
+    request = db.relationship("RequestModel", back_populates="badges")
 
 
 class RequestModel(Model):
@@ -17,7 +28,10 @@ class RequestModel(Model):
     asker_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     receiver_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     guesses = db.relationship("GuessModel", lazy="dynamic", uselist=True, cascade="all")
+
     accepted = db.Column(db.Boolean, unique=False, default=False)
+
+    badges = db.relationship("BadgesInRequest", back_populates="request")
 
     def save_to_db(self):
         db.session.add(self)

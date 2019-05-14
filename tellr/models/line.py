@@ -17,7 +17,7 @@ class LineModel(Model):
     question = db.relationship("QuestionModel")
 
     correct_id = db.Column(db.Integer, db.ForeignKey("answers.id"))
-    correct = db.relationship("AnswerModel", lazy=True)
+    correct = db.relationship("AnswerModel")
 
     @classmethod
     def find_by_id(cls, _id):
