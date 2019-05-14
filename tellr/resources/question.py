@@ -28,3 +28,17 @@ class FullQuestion(Resource):
         if question:
             return {"question": question_schema.dump(question)}
         return {"message": "question was not found"}, 404
+
+    def delete(self, question_id):
+        question = QuestionModel.find_by_id(question_id)
+        if question:
+            question.delete_from_db()
+        return {"msg": "question removed"}, 200
+
+    def patch(self, question_id):
+        question = QuestionModel.find_by_id(question_id)
+        if question:
+            question_json = request.get_json()
+            question.content = question_json["content"]
+            question.save_to_db()
+        return {"msg": "question updated"}, 200

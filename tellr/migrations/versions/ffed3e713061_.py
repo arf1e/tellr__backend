@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: eb069dc40b74
+Revision ID: ffed3e713061
 Revises: 
-Create Date: 2019-04-13 00:57:02.549585
+Create Date: 2019-05-12 03:01:14.232279
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = "eb069dc40b74"
+revision = "ffed3e713061"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,9 +21,11 @@ def upgrade():
     op.create_table(
         "questions",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("content", sa.String(length=40), nullable=False),
+        sa.Column("content", sa.String(length=50), nullable=False),
+        sa.Column("content_fem", sa.String(length=50), nullable=False),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("content"),
+        sa.UniqueConstraint("content_fem"),
     )
     op.create_table(
         "topics",
@@ -85,12 +87,18 @@ def upgrade():
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("boy_id", sa.Integer(), nullable=False),
         sa.Column("girl_id", sa.Integer(), nullable=False),
-        sa.Column("boy_request", sa.Integer(), nullable=False),
-        sa.Column("girl_request", sa.Integer(), nullable=False),
+        sa.Column("boy_request_id", sa.Integer(), nullable=False),
+        sa.Column("girl_request_id", sa.Integer(), nullable=False),
+        sa.Column(
+            "date_created",
+            sa.DateTime(timezone=True),
+            server_default=sa.text("now()"),
+            nullable=True,
+        ),
         sa.ForeignKeyConstraint(["boy_id"], ["users.id"]),
-        sa.ForeignKeyConstraint(["boy_request"], ["requests.id"]),
+        sa.ForeignKeyConstraint(["boy_request_id"], ["requests.id"]),
         sa.ForeignKeyConstraint(["girl_id"], ["users.id"]),
-        sa.ForeignKeyConstraint(["girl_request"], ["requests.id"]),
+        sa.ForeignKeyConstraint(["girl_request_id"], ["requests.id"]),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(

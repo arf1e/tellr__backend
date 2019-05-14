@@ -134,11 +134,13 @@ class User(Resource):
         # Сохраняем в базу гессы, которые были убраны из json на строке 118
         for guess in guesses_json:
             guess["request_id"] = req.id
-            guess_schema.load(guess).save_to_db()
+        guesses = guess_schema.load(guesses_json, many=True)
+        GuessModel.save_multiple(guesses)
         # На этом этапе у нас есть реквест, содержащий внутри себя гессы, всё это уже сохранено в базе.
         # Если есть ответный реквест (который мы искали на строке 121), а то есть мэтч,
         # нужно создать контакт между этими двумя пользователями.
         if match:
+            contact = None
             # Контакт содержит в себе необходимые поля boy_id, girl_id, boy_request_id, girl_request_id,
             # которые нам нужно заполнить в зависимости от пола пользователя.
             if user.sex == False:
@@ -150,12 +152,6 @@ class User(Resource):
                         "girl_request_id": match.id,
                     }
                 )
-                try:
-                    contact.save_to_db()
-                except:
-                    return {"message": DATABASE_ERROR}, 500
-                pusher_client.trigger([f'private-{contact.boy_id}', f'private-{contact.girl_id}'], 'new-contact', {"contact": contact_schema.dump(contact)})
-                return {"message": "contact created"}, 201
             else:
                 contact = contact_schema.load(
                     {
@@ -165,12 +161,16 @@ class User(Resource):
                         "girl_request_id": req.id,
                     }
                 )
-                try:
-                    contact.save_to_db()
-                except:
-                    return {"message": DATABASE_ERROR}, 500
-                pusher_client.trigger([f'private-{contact.boy_id}', f'private-{contact.girl_id}'], 'new-contact', {"contact": contact_schema.dump(contact)})
-                return {"message": "contact created"}, 201
+            try:
+                contact.save_to_db()
+            except:
+                return {"message": DATABASE_ERROR}, 500
+            pusher_client.trigger(
+                [f"private-{contact.boy_id}", f"private-{contact.girl_id}"],
+                "new-contact",
+                {"contact": contact_schema.dump(contact)},
+            )
+            return {"message": "contact created"}, 201
         return {"request": request_schema.dump(req)}, 201
 
 
