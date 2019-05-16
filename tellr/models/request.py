@@ -16,7 +16,6 @@ class BadgesInRequest(Model):
     badge = db.relationship("BadgeModel")
     request = db.relationship("RequestModel", back_populates="badges")
 
-
 class RequestModel(Model):
 
     __tablename__ = "requests"

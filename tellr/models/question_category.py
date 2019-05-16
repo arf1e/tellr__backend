@@ -25,5 +25,8 @@ class QuestionCategoryModel(Model):
         return cls.query.filter_by(id=_id).first()
 
     @classmethod
-    def get_questions(cls):
+    def find_all(cls):
         return cls.query.all()
+    
+    def get_questions(self):
+        return self.questions

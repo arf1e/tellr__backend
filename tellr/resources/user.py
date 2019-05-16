@@ -14,7 +14,7 @@ from flask_jwt_extended import (
 # models
 from tellr.models.user import UserModel
 from tellr.models.answer import AnswerModel
-from tellr.models.request import RequestModel
+from tellr.models.request import RequestModel, BadgesInRequest
 from tellr.models.contact import ContactModel
 from tellr.models.guess import GuessModel
 
@@ -114,8 +114,9 @@ class User(Resource):
         req_input = request.get_json()
         req_input["asker_id"] = asker_id
         req_input["receiver_id"] = user_id
-        # Убираем из него гессы, их будем сохранять в базу отдельно
+        # Убираем из него бэджи и гессы, их будем сохранять в базу отдельно
         guesses_json = req_input.pop("guesses", None)
+        badges_json = req_input.pop("badges", None)
         req = request_schema.load(req_input)
         # Проверяем на мэтч (существующий реквест в обратную сторону)
         match = RequestModel.find_existing(user_id, asker_id)
@@ -126,7 +127,11 @@ class User(Resource):
                 match.save_to_db()
             except:
                 return {"message": DATABASE_ERROR}, 500
-        # Сохраняем реквест в базу, чтобы иметь доступ к его айдишнику
+        # Сохраняем реквест в базу, чтобы иметь доступ к его айдишнику, перед этим загоним туда бэджи, делать такие штуки позволяет свойство 
+        badges = []
+        for badge in badges_json:
+            badges.append(BadgesInRequest(badge_id=badge))
+        req.badges = badges
         try:
             req.save_to_db()
         except:
