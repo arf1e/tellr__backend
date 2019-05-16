@@ -1,10 +1,16 @@
 from tellr.ma import ma
 from marshmallow import fields, validate
-from tellr.models.request import RequestModel
+from tellr.models.request import RequestModel, BadgesInRequest
 from tellr.models.guess import GuessModel
+from tellr.schemas.badge import BadgeSchema
 
 ModelSchema = ma.ModelSchema
 
+class BadgesInRequestSchema(ModelSchema):
+    class Meta:
+        model = BadgesInRequest
+        include_fk = True
+    badge = ma.Nested(BadgeSchema)
 
 class GuessSchema(ModelSchema):
     class Meta:
@@ -30,6 +36,7 @@ class RequestSchema(ModelSchema):
         dump_only = ("guesses",)
 
     guesses = ma.Nested(GuessSchema, many=True, exclude=("request_id", "id"))
+    badges = ma.Nested(BadgesInRequestSchema, many=True, only=("badge",))
 
 
 class RequestExtendedSchema(ModelSchema):

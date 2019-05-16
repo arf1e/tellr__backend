@@ -23,7 +23,8 @@ from tellr.resources.requests import Requests, Request
 from tellr.resources.contacts import ContactList, Contact
 from tellr.resources.self import Self
 from tellr.resources.pusher import PusherAuth
-from tellr.resources.badge import Badge
+from tellr.resources.badge import Badge, BadgeList
+from tellr.resources.question_category import Category, CategoryList, CategoryCreate
 
 # App instance
 app = Flask(__name__)
@@ -81,4 +82,8 @@ api.add_resource(ContactList, "/contacts")
 api.add_resource(Contact, "/contacts/<int:contact_id>")
 api.add_resource(Self, "/user/self")
 api.add_resource(PusherAuth, "/pusher/auth")
-api.add_resource(Badge, "/badge")
+api.add_resource(Badge, "/badge/<int:badge_id>")
+api.add_resource(BadgeList, "/badges")
+api.add_resource(Category, "/category/<int:category_id>")
+api.add_resource(CategoryCreate, "/category")
+api.add_resource(CategoryList, "/categories")

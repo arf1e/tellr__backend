@@ -21,7 +21,6 @@ passlib = "*"
 flask-migrate = "*"
 flask-socketio = "*"
 pusher = "*"
-
 [dev-packages]
 pylint = "*"
 "autopep8" = "*"
