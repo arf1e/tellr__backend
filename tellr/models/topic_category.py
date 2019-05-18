@@ -3,13 +3,14 @@ from tellr.db import db
 Model = db.Model
 
 
-class BadgeModel(Model):
-    __tablename__ = "badges"
+class QuestionCategoryModel(Model):
+
+    __tablename__ = "question_categories"
 
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(15), unique=True)
-    title_f = db.Column(db.String(15), unique=True)
-    emoji = db.Column(db.String(40), unique=True)
+    title = db.Column(db.String(25), nullable=False, unique=True)
+
+    topcis = db.relationship("TopicModel", lazy="dynamic", uselist=True)
 
     def save_to_db(self):
         db.session.add(self)
@@ -26,3 +27,6 @@ class BadgeModel(Model):
     @classmethod
     def find_all(cls):
         return cls.query.all()
+
+    def get_topics(self):
+        return self.topics

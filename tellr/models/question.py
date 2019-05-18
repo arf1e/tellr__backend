@@ -1,5 +1,6 @@
 from tellr.db import db
 from tellr.models.question_category import QuestionCategoryModel
+
 Model = db.Model
 
 

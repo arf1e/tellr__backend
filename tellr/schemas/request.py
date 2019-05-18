@@ -6,11 +6,13 @@ from tellr.schemas.badge import BadgeSchema
 
 ModelSchema = ma.ModelSchema
 
+
 class BadgesInRequestSchema(ModelSchema):
     class Meta:
         model = BadgesInRequest
-        include_fk = True
-    badge = ma.Nested(BadgeSchema)
+
+    badge = ma.Nested(BadgeSchema, only=("id",))
+
 
 class GuessSchema(ModelSchema):
     class Meta:
@@ -46,3 +48,4 @@ class RequestExtendedSchema(ModelSchema):
         dump_only = ("guesses",)
 
     guesses = ma.Nested(GuessExtendedSchema, many=True, exclude=("request_id", "id"))
+    badges = ma.Nested(BadgesInRequestSchema, many=True, only=("badge",))

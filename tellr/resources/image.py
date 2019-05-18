@@ -23,30 +23,15 @@ class AvatarUpload(Resource):
         This method should be idempotent, meaning uploading a new avatar
         overwrites the previous one.
         """
-        data = image_schema.load(request.files)
+        request_json = request.get_json()  # {"avatar": link}
         user_id = get_jwt_identity()
-        filename = uuid.uuid3(uuid.NAMESPACE_DNS, f"user_{user_id}")
-        folder = "avatars"
-        # check if avatar already exists
-        avatar_path = image_helper.find_image_any_format(filename, folder)
-        if avatar_path:
-            try:
-                os.remove(avatar_path)
-            except:
-                return {"message": "avatar delete failed"}, 500
-        try:
-            ext = image_helper.get_extension(data["image"].filename)
-            if ext == "webp":
-                raise UploadNotAllowed
-            avatar = str(filename) + ext
-            avatar_path = image_helper.get_path(
-                image_helper.save_image(data["image"], folder=folder, name=avatar)
-            )
-            image_helper.resize(avatar_path)
-            return {"avatar": avatar_path.split("tellr")[1]}, 200
-        except UploadNotAllowed:
-            extension = image_helper.get_extension(data["image"])
-            return {"message": f"'{extension}' is an incorrect extension"}, 500
+        user = UserModel.find_by_id(user_id)
+        if user:
+            print(request_json)
+            user.avatar = request_json["avatar"]
+            user.avatar_big = request_json["avatar_big"]
+            user.save_to_db()
+            return {"message": "avatar updated"}, 200
 
 
 class Avatar(Resource):
@@ -55,9 +40,7 @@ class Avatar(Resource):
         """
         Resource that sends avatar of given user.
         """
-        folder = "avatars"
-        filename = uuid.uuid3(uuid.NAMESPACE_DNS, f"user_{user_id}")
-        avatar = image_helper.find_image_any_format(str(filename), folder)
-        if avatar:
-            return {"avatar": avatar}, 200
+        user = UserModel.find_by_id(user_id)
+        if user.avatar:
+            return {"avatar": user.avatar}, 200
         return {"message": "avatar was not found"}, 404
