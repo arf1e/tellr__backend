@@ -27,6 +27,6 @@ class QuestionCategoryModel(Model):
     @classmethod
     def find_all(cls):
         return cls.query.all()
-    
+
     def get_questions(self):
         return self.questions

@@ -22,6 +22,8 @@ class UserModel(Model):
     first_name = db.Column(db.String)
     birthday = db.Column(db.DateTime, default=date(1997, 10, 16))
 
+    avatar = db.Column(db.String())
+    avatar_big = db.Column(db.String())
     instagram = db.Column(db.String(30))
     vk = db.Column(db.String(32))
 

@@ -6,10 +6,13 @@ from tellr.schemas.badge import BadgeSchema
 
 ModelSchema = ma.ModelSchema
 
+
 class BadgesInRequestSchema(ModelSchema):
     class Meta:
         model = BadgesInRequest
+
     badge = ma.Nested(BadgeSchema, only=("id",))
+
 
 class GuessSchema(ModelSchema):
     class Meta:

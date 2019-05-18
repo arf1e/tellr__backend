@@ -30,10 +30,6 @@ class UserTest(BaseTest):
             self.assertEqual(user_profile["age"], 21)
             self.assertEqual(user_profile["first_name"], "Егор")
             self.assertTrue(user_profile["sex"])
-            self.assertEqual(
-                user_profile["avatar"], "/static/images/avatars/flower.png"
-            )
-
             user.delete_from_db()
 
             self.assertIsNone(UserModel.find_by_username("egorque"))

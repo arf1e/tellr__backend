@@ -127,7 +127,7 @@ class User(Resource):
                 match.save_to_db()
             except:
                 return {"message": DATABASE_ERROR}, 500
-        # Сохраняем реквест в базу, чтобы иметь доступ к его айдишнику, перед этим загоним туда бэджи, делать такие штуки позволяет свойство 
+        # Сохраняем реквест в базу, чтобы иметь доступ к его айдишнику, перед этим загоним туда бэджи, делать такие штуки позволяет свойство
         badges = []
         for badge in badges_json:
             badges.append(BadgesInRequest(badge_id=badge))

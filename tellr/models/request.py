@@ -6,6 +6,7 @@ import sqlalchemy
 
 Model = db.Model
 
+
 class BadgesInRequest(Model):
     __tablename__ = "badges_in_request"
 
@@ -15,6 +16,7 @@ class BadgesInRequest(Model):
 
     badge = db.relationship("BadgeModel")
     request = db.relationship("RequestModel", back_populates="badges")
+
 
 class RequestModel(Model):
 

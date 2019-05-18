@@ -6,6 +6,7 @@ from tellr.models.question_category import QuestionCategoryModel
 question_category_schema = QuestionCategorySchema()
 question_category_list_schema = QuestionCategorySchema(many=True)
 
+
 class CategoryCreate(Resource):
     def post(self):
         category_json = request.get_json()
@@ -15,6 +16,7 @@ class CategoryCreate(Resource):
         except:
             return {"msg": "Server error"}, 500
         return {"category": question_category_schema.dump(category)}, 201
+
 
 class Category(Resource):
     def get(self, category_id):

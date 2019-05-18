@@ -8,40 +8,17 @@ badge_schema = BadgeSchema()
 badge_list_schema = BadgeSchema(many=True)
 
 badges = [
-  {
-    "title": "Красивый",
-    "title_f": "Красивая",
-    "emoji": "+1"
-  },
-  {
-    "title": "Милый",
-    "title_f": "Милая",
-    "emoji": "cat"
-  },
-  {
-    "title": "Хот",
-    "title_f": "Хот",
-    "emoji": "fire"
-  },
-  {
-    "title": "Скромный",
-    "title_f": "Скромная",
-    "emoji": "flushed"
-  },
-  {
-    "title": "Тусовщик",
-    "title_f": "Тусовщица",
-    "emoji": "tada"
-  },
-  {
-    "title": "Творческий",
-    "title_f": "Творческая",
-    "emoji": "art"
-  },
+    {"title": "Красивый", "title_f": "Красивая", "emoji": "+1"},
+    {"title": "Милый", "title_f": "Милая", "emoji": "cat"},
+    {"title": "Хот", "title_f": "Хот", "emoji": "fire"},
+    {"title": "Скромный", "title_f": "Скромная", "emoji": "flushed"},
+    {"title": "Тусовщик", "title_f": "Тусовщица", "emoji": "tada"},
+    {"title": "Творческий", "title_f": "Творческая", "emoji": "art"},
 ]
 
+
 def load_badges():
-  with app.app_context():
-    db.create_all()
-    db.session.bulk_save_objects(badge_list_schema.load(badges))
-    db.session.commit()
+    with app.app_context():
+        db.create_all()
+        db.session.bulk_save_objects(badge_list_schema.load(badges))
+        db.session.commit()
