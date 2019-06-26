@@ -25,6 +25,22 @@ class Category(Resource):
             return {"category": question_category_schema.dump(category)}, 200
         return {"msg": "No category with such id"}
 
+    def patch(self, category_id):
+        category = QuestionCategoryModel.find_by_id(category_id)
+        if category:
+            category_json = request.get_json()
+            if "title" in category_json.keys():
+                category.title = category_json["title"]
+            if "image" in category_json.keys():
+                category.image = category_json["image"]
+            if "description" in category_json.keys():
+                category.description = category_json["description"]
+            try:
+                category.save_to_db()
+            except:
+                return {"message": "Database error"}, 500
+        return {"category": question_category_schema.dump(category)}, 200
+
     def delete(self, category_id):
         category = QuestionCategoryModel.find_by_id(category_id)
         if category:
