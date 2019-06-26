@@ -1,5 +1,6 @@
 from tellr.db import db
 from tellr.models.question_category import QuestionCategoryModel
+from sqlalchemy.sql.expression import func
 
 Model = db.Model
 
@@ -33,3 +34,7 @@ class QuestionModel(Model):
     @classmethod
     def get_questions(cls):
         return cls.query.all()
+
+    @classmethod
+    def find_random(cls, list):
+        return cls.query.filter(~(cls.id.in_(list))).order_by(func.random()).first()

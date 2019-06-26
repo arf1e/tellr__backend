@@ -14,7 +14,7 @@ from flask_migrate import Migrate
 # Resources
 from tellr.resources.user import UserRegister, User, UserLogin, UserLogout, UserQuery
 from tellr.resources.image import AvatarUpload, Avatar
-from tellr.resources.question import Question, Questions, FullQuestion
+from tellr.resources.question import Question, Questions, FullQuestion, RandomQuestion
 from tellr.resources.answer import Answer
 from tellr.resources.line import LineCreate, Line, Lines
 from tellr.resources.topic import Topic
@@ -95,3 +95,4 @@ api.add_resource(Category, "/category/<int:category_id>")
 api.add_resource(CategoryCreate, "/category")
 api.add_resource(CategoryList, "/categories")
 api.add_resource(GetQuestions, "/category/<int:category_id>/questions")
+api.add_resource(RandomQuestion, "/questions/random")

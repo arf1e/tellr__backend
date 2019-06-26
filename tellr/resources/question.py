@@ -2,9 +2,13 @@ from flask_restplus import Resource
 from flask import request
 from tellr.models.question import QuestionModel
 from tellr.schemas.question import QuestionSchema
+from tellr.schemas.user import UserSchema
 from tellr.models.answer import AnswerModel
+from flask_jwt_extended import get_jwt_identity, jwt_required
+from tellr.models.user import UserModel
 
 question_schema = QuestionSchema()
+user_schema = UserSchema()
 question_list_schema = QuestionSchema(many=True)
 
 
@@ -14,6 +18,20 @@ class Question(Resource):
         question = question_schema.load(question_json)
         question.save_to_db()
         return {"msg": "question added"}, 201
+
+
+class RandomQuestion(Resource):
+    @jwt_required
+    def get(self):
+        user_id = get_jwt_identity()
+        if user_id is None:
+            return {"msg": "Authorization required"}, 401
+        user = UserModel.find_by_id(user_id)
+        user_lines = user_schema.dump(user)["lines"]
+        questions = []
+        for line in user_lines:
+            questions.append(line["question"]["id"])
+        print(QuestionModel.find_random(questions))
 
 
 class Questions(Resource):
