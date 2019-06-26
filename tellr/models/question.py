@@ -11,6 +11,7 @@ class QuestionModel(Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(50), nullable=False, unique=True)
     answers = db.relationship("AnswerModel", lazy="dynamic", uselist=True)
+    closed = db.Column(db.Boolean, default=False)
 
     category_id = db.Column(
         db.Integer, db.ForeignKey("question_categories.id"), nullable=False

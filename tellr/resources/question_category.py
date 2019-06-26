@@ -41,4 +41,4 @@ class CategoryList(Resource):
     @classmethod
     def get(cls):
         categories = QuestionCategoryModel.find_all()
-        return {"badges": question_category_list_schema.dump(categories)}, 200
+        return {"categories": question_category_list_schema.dump(categories)}, 200

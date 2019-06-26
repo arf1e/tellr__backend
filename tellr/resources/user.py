@@ -133,8 +133,10 @@ class User(Resource):
             badges.append(BadgesInRequest(badge_id=badge))
         req.badges = badges
         try:
+            print(request_schema.dump(req))
             req.save_to_db()
         except:
+            print("Валимся на бэйджиках")
             return {"message": DATABASE_ERROR}, 500
         # Сохраняем в базу гессы, которые были убраны из json на строке 118
         for guess in guesses_json:
