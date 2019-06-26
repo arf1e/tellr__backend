@@ -59,6 +59,12 @@ def create_tables():
 
 db.init_app(app)
 
+from tellr.scripts.load_questions import load_questions
+from tellr.scripts.load_badges import load_badges
+
+# load_questions()
+# load_badges()
+
 
 api.add_resource(UserRegister, "/register")
 api.add_resource(UserLogin, "/login")

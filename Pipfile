@@ -21,9 +21,12 @@ passlib = "*"
 flask-migrate = "*"
 flask-socketio = "*"
 pusher = "*"
+twilio = "*"
+
 [dev-packages]
 pylint = "*"
 "autopep8" = "*"
+black = "*"
 
 [requires]
 python_version = "3.6"
