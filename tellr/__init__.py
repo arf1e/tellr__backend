@@ -25,6 +25,7 @@ from tellr.resources.self import Self
 from tellr.resources.pusher import PusherAuth
 from tellr.resources.badge import Badge, BadgeList
 from tellr.resources.question_category import Category, CategoryList, CategoryCreate
+from tellr.resources.get_guestions import GetQuestions
 
 # App instance
 app = Flask(__name__)
@@ -93,3 +94,4 @@ api.add_resource(BadgeList, "/badges")
 api.add_resource(Category, "/category/<int:category_id>")
 api.add_resource(CategoryCreate, "/category")
 api.add_resource(CategoryList, "/categories")
+api.add_resource(GetQuestions, "/category/<int:category_id>/questions")
