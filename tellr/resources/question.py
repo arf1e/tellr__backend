@@ -31,7 +31,8 @@ class RandomQuestion(Resource):
         questions = []
         for line in user_lines:
             questions.append(line["question"]["id"])
-        print(QuestionModel.find_random(questions))
+        question = QuestionModel.find_random(questions)
+        return {"question": question_schema.dump(question)}, 200
 
 
 class Questions(Resource):

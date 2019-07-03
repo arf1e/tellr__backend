@@ -24,3 +24,13 @@ class UserSchema(ModelSchema):
     invoices = ma.Nested("RequestSchema", many=True)
     hated = fields.Pluck("DecisionSchema", "topic_id", many=True)
     loved = fields.Pluck("DecisionSchema", "topic_id", many=True)
+
+
+class UserStatsSchema(ModelSchema):
+    class Meta:
+        model = UserModel
+
+    contacts = ma.Nested(
+        "ContactExtendedSchema", only=("boy_request", "girl_request"), many=True
+    )
+    invoices = ma.Nested("RequestSchema", only=("badges",), many=True)
