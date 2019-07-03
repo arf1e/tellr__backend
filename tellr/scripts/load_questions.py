@@ -8,28 +8,23 @@ from tellr import app
 category_list_schema = QuestionCategorySchema(many=True)
 question_list_schema = QuestionSchema(many=True)
 
-
-badges = [
-    {"title": "Красивый", "title_f": "Красивая", "emoji": "+1"},
-    {"title": "Милый", "title_f": "Милая", "emoji": "cat"},
-    {"title": "Хот", "title_f": "Хот", "emoji": "fire"},
-    {"title": "Скромный", "title_f": "Скромная", "emoji": "flushed"},
-    {"title": "Тусовщик", "title_f": "Тусовщица", "emoji": "tada"},
-    {"title": "Творческий", "title_f": "Творческая", "emoji": "art"},
-]
-
 categories = [
-  {"title": "Общие вопросы"}
+    {
+        "title": "Вопросы Дудя",
+        "image": "https://cdn21.img.ria.ru/images/150978/16/1509781669_312:45:1736:852_600x0_80_0_0_0acb230165c35f4b24e7ee06a44c5cb2.png",
+        "description": "Никому никогда не было интересно сколько вы зарабатываете? Этот и другие вопросы здесь.",
+    },
+    {"title": "Общие вопросы"},
 ]
 
 questions = [
-  {"content": "Оказавшись перед Путиным, что ты ему скажешь?", "category_id": 1},
-  {"content": "Путин красавчик?", "category_id": 1},
-  {"content": "Когда последний раз дрался?", "category_id": 1},
-  {"content": "Твоё любимое время года?", "category_id": 2},
-  {"content": "Есть кот?", "category_id": 2},
-  {"content": "Хочешь известности? Почему?", "category_id": 2},
-  {"content": "Были мысли о суициде?", "category_id": 2},
+    {"content": "Оказавшись перед Путиным, что ты ему скажешь?", "category_id": 1},
+    {"content": "Путин красавчик?", "category_id": 1},
+    {"content": "Когда последний раз дрался?", "category_id": 1},
+    {"content": "Твоё любимое время года?", "category_id": 2},
+    {"content": "Есть кот?", "category_id": 2},
+    {"content": "Хочешь известности? Почему?", "category_id": 2},
+    {"content": "Были мысли о суициде?", "category_id": 2},
 ]
 
 
