@@ -58,6 +58,9 @@ class FullQuestion(Resource):
         question = QuestionModel.find_by_id(question_id)
         if question:
             question_json = request.get_json()
-            question.content = question_json["content"]
+            if "content" in question_json.keys():
+                question.content = question_json["content"]
+            if "closed" in question_json.keys():
+                question.closed = question_json.closed
             question.save_to_db()
         return {"msg": "question updated"}, 200
