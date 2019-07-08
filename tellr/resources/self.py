@@ -3,9 +3,11 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask import request
 
 from tellr.models.user import UserModel
-from tellr.schemas.user import UserSchema
+from tellr.schemas.user import UserSchema, SelfSchema
+from tellr.libs.passwords import encrypt_password, check_encrypted_password
 
 user_schema = UserSchema()
+self_schema = SelfSchema()
 
 
 class Self(Resource):
@@ -31,6 +33,24 @@ class Self(Resource):
             user.vk = req_json["vk"]
         try:
             user.save_to_db()
-            return {"user": user_schema.dump(user)}, 200
+            return {"user": self_schema.dump(user)}, 200
         except:
             return {"message": "Database error"}, 500
+
+    @classmethod
+    @jwt_required
+    def post(cls):
+        """ 
+            Endpoint for changing password.
+
+        """
+        user_id = get_jwt_identity()
+        user = UserModel.find_by_id(user_id)
+        req_json = request.get_json()
+        if check_encrypted_password(req_json["password"], user.password):
+            user.password = encrypt_password(req_json["new_password"])
+            user.save_to_db()
+            return {"message": "password was updated"}, 200
+        else:
+            return {"message": "incorrect password"}, 402
+

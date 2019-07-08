@@ -29,3 +29,17 @@ class Answer(Resource):
         except:
             return {"msg": "Server error"}, 500
         return {"answer": answer_entity}, 201
+
+
+class UpdateAnswer(Resource):
+    @classmethod
+    def delete(cls, answer_id):
+        answer = AnswerModel.find_by_id(answer_id)
+        if answer:
+            try:
+                answer.delete_from_db()
+            except:
+                return {"msg": "Server error"}, 500
+            return {"msg": "Answer was successfully removed"}, 200
+        else:
+            return {"msg": "Answer was not found"}, 404

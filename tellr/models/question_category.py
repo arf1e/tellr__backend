@@ -10,7 +10,7 @@ class QuestionCategoryModel(Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(20), nullable=False, unique=True)
     image = db.Column(db.String)
-    description = db.Column(db.String(80))
+    description = db.Column(db.String(90))
     questions = db.relationship("QuestionModel", lazy="dynamic", uselist=True)
 
     def save_to_db(self):

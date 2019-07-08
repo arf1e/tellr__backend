@@ -18,4 +18,3 @@ class GetQuestions(Resource):
         if category:
             questions = question_category_schema.dump(category)["questions"]
             return {"questions": questions}, 200
-

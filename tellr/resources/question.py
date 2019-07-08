@@ -61,6 +61,6 @@ class FullQuestion(Resource):
             if "content" in question_json.keys():
                 question.content = question_json["content"]
             if "closed" in question_json.keys():
-                question.closed = question_json.closed
+                question.closed = question_json["closed"]
             question.save_to_db()
         return {"msg": "question updated"}, 200

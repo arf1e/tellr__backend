@@ -19,7 +19,7 @@ from tellr.models.contact import ContactModel
 from tellr.models.guess import GuessModel
 
 # schemas
-from tellr.schemas.user import UserSchema
+from tellr.schemas.user import UserSchema, SelfSchema
 from tellr.schemas.answer import AnswerSchema
 from tellr.schemas.request import RequestSchema, GuessSchema
 from tellr.schemas.contact import ContactSchema
@@ -39,6 +39,8 @@ contact_schema = ContactSchema()
 contact_list_schema = ContactSchema(many=True)
 guess_schema = GuessSchema()
 guess_list_schema = GuessSchema(many=True)
+
+self_schema = SelfSchema()
 
 DATABASE_ERROR = "Database error"
 
@@ -78,7 +80,7 @@ class UserLogin(Resource):
                 {
                     "access_token": access_token,
                     "refresh_token": refresh_token,
-                    "user": user_schema.dump(user),
+                    "user": self_schema.dump(user),
                 },
                 200,
             )

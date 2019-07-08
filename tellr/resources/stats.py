@@ -27,7 +27,7 @@ class Statistics(Resource):
         user = UserModel.find_by_id(user_id)
         user_json = user_schema.dump(user)
         # now we need to collect badges from user`s invoices and requests from other users in contacts
-        request = "girl_request" if user_json["sex"] == True else "boy_request"
+        request = "girl_request" if user_json["sex"] else "boy_request"
         invoices = user_json["invoices"]
         contacts = user_json["contacts"]
         total = len(invoices) + len(contacts)
@@ -35,8 +35,9 @@ class Statistics(Resource):
         for invoice in invoices:
             badges_list.append(invoice["badges"])
         for contact in contacts:
-            print(contact[request])
             badges_list.append(contact[request]["badges"])
+        if len(badges_list) == 0:
+            return {"stats": [], "total": total}, 200
         # ok now we`re dealing with list which consists of two lists
         badges_list = reduce(lambda x, y: x + y, badges_list)  # flatten that boi
         stats = []
