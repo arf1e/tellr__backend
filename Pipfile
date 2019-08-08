@@ -23,6 +23,7 @@ flask-socketio = "*"
 pusher = "*"
 twilio = "*"
 pytest = "*"
+flask-cors = "*"
 
 [dev-packages]
 pylint = "*"

@@ -10,6 +10,7 @@ from tellr.libs.image_helper import IMAGE_SET
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from flask_migrate import Migrate
+from flask_cors import CORS
 
 # Resources
 from tellr.resources.user import UserRegister, User, UserLogin, UserLogout, UserQuery
@@ -42,6 +43,9 @@ api = Api(app)
 
 jwt = JWTManager(app)
 migrate = Migrate(app, db)
+
+# CORS
+cors = CORS(app, resources={r"/*": {"origins": ["http://localhost:3000"]}})
 
 
 @jwt.token_in_blacklist_loader
