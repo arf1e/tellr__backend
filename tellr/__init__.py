@@ -10,12 +10,13 @@ from tellr.libs.image_helper import IMAGE_SET
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from flask_migrate import Migrate
+from flask_cors import CORS
 
 # Resources
 from tellr.resources.user import UserRegister, User, UserLogin, UserLogout, UserQuery
 from tellr.resources.image import AvatarUpload, Avatar
 from tellr.resources.question import Question, Questions, FullQuestion, RandomQuestion
-from tellr.resources.answer import Answer
+from tellr.resources.answer import Answer, UpdateAnswer
 from tellr.resources.line import LineCreate, Line, Lines
 from tellr.resources.topic import Topic
 from tellr.resources.decision import Decision
@@ -42,6 +43,9 @@ api = Api(app)
 
 jwt = JWTManager(app)
 migrate = Migrate(app, db)
+
+# CORS
+cors = CORS(app, resources={r"/*": {"origins": ["http://localhost:3000"]}})
 
 
 @jwt.token_in_blacklist_loader
@@ -79,6 +83,7 @@ api.add_resource(Question, "/question")
 api.add_resource(Questions, "/questions")
 api.add_resource(FullQuestion, "/questions/<int:question_id>")
 api.add_resource(Answer, "/answer")
+api.add_resource(UpdateAnswer, "/answers/<int:answer_id>")
 api.add_resource(LineCreate, "/line")
 api.add_resource(Line, "/line/<int:line_id>")
 api.add_resource(Lines, "/lines")

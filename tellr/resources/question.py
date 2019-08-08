@@ -1,7 +1,9 @@
 from flask_restplus import Resource
 from flask import request
 from tellr.models.question import QuestionModel
+from tellr.models.answer import AnswerModel
 from tellr.schemas.question import QuestionSchema
+from tellr.schemas.answer import AnswerSchema
 from tellr.schemas.user import UserSchema
 from tellr.models.answer import AnswerModel
 from flask_jwt_extended import get_jwt_identity, jwt_required
@@ -58,6 +60,9 @@ class FullQuestion(Resource):
         question = QuestionModel.find_by_id(question_id)
         if question:
             question_json = request.get_json()
-            question.content = question_json["content"]
+            if "content" in question_json.keys():
+                question.content = question_json["content"]
+            if "closed" in question_json.keys():
+                question.closed = question_json["closed"]
             question.save_to_db()
         return {"msg": "question updated"}, 200

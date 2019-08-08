@@ -17,9 +17,10 @@ from tellr.models.answer import AnswerModel
 from tellr.models.request import RequestModel, BadgesInRequest
 from tellr.models.contact import ContactModel
 from tellr.models.guess import GuessModel
+from tellr.models.badge import BadgeModel
 
 # schemas
-from tellr.schemas.user import UserSchema
+from tellr.schemas.user import UserSchema, SelfSchema
 from tellr.schemas.answer import AnswerSchema
 from tellr.schemas.request import RequestSchema, GuessSchema
 from tellr.schemas.contact import ContactSchema
@@ -40,6 +41,8 @@ contact_list_schema = ContactSchema(many=True)
 guess_schema = GuessSchema()
 guess_list_schema = GuessSchema(many=True)
 
+self_schema = SelfSchema()
+
 DATABASE_ERROR = "Database error"
 
 
@@ -51,12 +54,9 @@ class UserRegister(Resource):
             bday = user_json["birthday"].split("-")
             user_json["birthday"] = f"{bday[2]}-{bday[1]}-{bday[0]}T00:00:00Z"
             user_json["password"] = encrypt_password(user_json["password"])
-        user_data = user_schema.load(user_json)
-        user = user_data
-
-        if UserModel.find_by_username(user.username):
+        user = user_schema.load(user_json)
+        if UserModel.find_by_email(user.email):
             return {"msg": "user exists"}, 400
-
         try:
             user.save_to_db()
         except:
@@ -68,9 +68,8 @@ class UserLogin(Resource):
     @classmethod
     def post(cls):
         user_json = request.get_json()
-
         user_data = user_schema.load(user_json)
-        user = UserModel.find_by_username(user_data.username)
+        user = UserModel.find_by_email(user_data.email)
         if user and check_encrypted_password(user_json["password"], user.password):
             access_token = create_access_token(identity=user.id, expires_delta=False)
             refresh_token = create_refresh_token(user.id)
@@ -78,7 +77,7 @@ class UserLogin(Resource):
                 {
                     "access_token": access_token,
                     "refresh_token": refresh_token,
-                    "user": user_schema.dump(user),
+                    "user": self_schema.dump(user),
                 },
                 200,
             )
@@ -120,6 +119,7 @@ class User(Resource):
         req = request_schema.load(req_input)
         # Проверяем на мэтч (существующий реквест в обратную сторону)
         match = RequestModel.find_existing(user_id, asker_id)
+        print(BadgeModel.find_by_id(2))
         if match:
             match.accepted = True
             req.accepted = True
@@ -133,10 +133,9 @@ class User(Resource):
             badges.append(BadgesInRequest(badge_id=badge))
         req.badges = badges
         try:
-            print(request_schema.dump(req))
             req.save_to_db()
-        except:
-            print("Валимся на бэйджиках")
+        except Exception as e:
+            print(e)
             return {"message": DATABASE_ERROR}, 500
         # Сохраняем в базу гессы, которые были убраны из json на строке 118
         for guess in guesses_json:
@@ -201,16 +200,19 @@ class UserQuery(Resource):
         user_data = UserModel.find_by_id(user_id)
         user = user_schema.dump(user_data)
         friends = []
-        print(user["outvoices"] + friends)
+        users = []
         for contact in user["contacts"]:
             if user["sex"] == True:
                 friends.append(contact["girl_id"])
             else:
                 friends.append(contact["boy_id"])
         if user["sex"] == True:
+            print("pacan")
             users = user_list_schema.dump(
                 UserModel.find_females(user["outvoices"] + friends)
             )
+            print(user_list_schema.dump(UserModel.find_females([])))
+            print(user_list_schema.dump(UserModel.find_males([])))
         else:
             users = user_list_schema.dump(
                 UserModel.find_males(user["outvoices"] + friends)

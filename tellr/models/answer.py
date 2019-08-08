@@ -21,6 +21,10 @@ class AnswerModel(Model):
         db.session.delete(self)
         db.session.commit()
 
+    def save_multiple(objects):
+        db.session.bulk_save_objects(objects)
+        db.session.commit()
+
     @classmethod
     def find_by_content(cls, _content, _question_id):
         return cls.query.filter(

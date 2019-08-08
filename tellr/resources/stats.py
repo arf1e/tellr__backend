@@ -2,6 +2,7 @@ from flask_restplus import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask import request
 from collections import Counter
+from functools import reduce
 
 from tellr.models.user import UserModel
 from tellr.schemas.user import UserStatsSchema
@@ -29,13 +30,16 @@ class Statistics(Resource):
         request = "girl_request" if user_json["sex"] else "boy_request"
         invoices = user_json["invoices"]
         contacts = user_json["contacts"]
+        total = len(invoices) + len(contacts)
         badges_list = []
         for invoice in invoices:
             badges_list.append(invoice["badges"])
         for contact in contacts:
             badges_list.append(contact[request]["badges"])
+        if len(badges_list) == 0:
+            return {"stats": [], "total": total}, 200
         # ok now we`re dealing with list which consists of two lists
-        badges_list = badges_list[0] + badges_list[1]  # flatten that boi
+        badges_list = reduce(lambda x, y: x + y, badges_list)  # flatten that boi
         stats = []
         for element in badges_list:
             stats.append(
@@ -50,4 +54,4 @@ class Statistics(Resource):
             output.append(
                 {"badge": badge_schema.dump(BadgeModel.find_by_id(_id)), "times": count}
             )
-        return {"stats": output}, 200
+        return {"stats": output, "total": total}, 200

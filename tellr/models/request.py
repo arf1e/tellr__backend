@@ -2,6 +2,7 @@ from tellr.db import db
 from sqlalchemy.sql.expression import func, select
 from tellr.models.guess import GuessModel
 from tellr.models.badge import BadgeModel
+from datetime import datetime
 import sqlalchemy
 
 Model = db.Model
@@ -30,6 +31,8 @@ class RequestModel(Model):
     receiver_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     guesses = db.relationship("GuessModel", lazy="dynamic", uselist=True, cascade="all")
 
+    created_at = db.Column(db.DateTime, default=datetime.now().strftime("%Y-%m-%d"))
+    checked = db.Column(db.Boolean, default=False)
     accepted = db.Column(db.Boolean, unique=False, default=False)
 
     badges = db.relationship("BadgesInRequest", back_populates="request")

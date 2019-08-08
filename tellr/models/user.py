@@ -15,7 +15,7 @@ class UserModel(Model):
 
     id = db.Column(db.Integer, primary_key=True)
     # basic info
-    username = db.Column(db.String(30), unique=True, nullable=False)
+    email = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)
     city = db.Column(db.String(40), default="Санкт-Петербург")
     sex = db.Column(db.Boolean)
@@ -66,8 +66,8 @@ class UserModel(Model):
 
     # Some more db methods
     @classmethod
-    def find_by_username(cls, username):
-        return cls.query.filter_by(username=username).first()
+    def find_by_email(cls, email):
+        return cls.query.filter_by(email=email).first()
 
     @classmethod
     def find_by_id(cls, _id):
