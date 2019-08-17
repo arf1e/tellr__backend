@@ -56,7 +56,7 @@ class UserRegister(Resource):
             user_json["password"] = encrypt_password(user_json["password"])
         user = user_schema.load(user_json)
         if UserModel.find_by_email(user.email):
-            return {"msg": "user exists"}, 400
+            return {"msg": "Пользователь с таким адресом почты уже существует!"}, 400
         try:
             user.save_to_db()
         except:
