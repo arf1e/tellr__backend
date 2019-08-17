@@ -9,14 +9,16 @@ class UserTest(TestCase):
     def test_create_user(self):
         user = user_schema.load(
             {
-                "username": "egorque",
+                "email": "egorque@gmail.com",
                 "password": "12345",
                 "first_name": "Егор",
                 "sex": True,
             }
         )
         self.assertEqual(
-            user.username, "egorque", "Юзернейм пользователя не совпадает с ожидаемым"
+            user.email,
+            "egorque@gmail.com",
+            "Юзернейм пользователя не совпадает с ожидаемым",
         )
         self.assertEqual(
             user.first_name, "Егор", "Имя пользователя не совпадает с ожидаемым"

@@ -1,0 +1,6 @@
+{
+  "tellr/tests/base_test.py": true, 
+  "tellr/tests/integration/schemas/user_test.py": true, 
+  "tellr/tests/system/user_test.py": true, 
+  "tellr/tests/unit/schemas/user_test.py": true
+}

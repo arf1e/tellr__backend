@@ -12,7 +12,7 @@ class UserTest(BaseTest):
                     headers={"Content-type": "application/json"},
                     data=json.dumps(
                         {
-                            "username": "troubnique",
+                            "email": "troubnique@gmail.com",
                             "password": "sudobangbang",
                             "first_name": "Слава",
                             "sex": True,
@@ -22,7 +22,7 @@ class UserTest(BaseTest):
 
                 self.assertDictEqual({"msg": "user created"}, json.loads(response.data))
                 self.assertEqual(response.status_code, 201)
-                self.assertIsNotNone(UserModel.find_by_username("troubnique"))
+                self.assertIsNotNone(UserModel.find_by_email("troubnique@gmail.com"))
 
     def test_register_and_login(self):
         with self.app() as client:  # new app instance
@@ -32,7 +32,7 @@ class UserTest(BaseTest):
                     headers={"Content-Type": "application/json"},
                     data=json.dumps(
                         {
-                            "username": "troubnique",
+                            "email": "troubnique@gmail.com",
                             "password": "sudobangbang",
                             "first_name": "Слава",
                             "sex": True,
@@ -43,7 +43,7 @@ class UserTest(BaseTest):
                 login_response = client.post(
                     "/login",
                     data=json.dumps(
-                        {"username": "troubnique", "password": "sudobangbang"}
+                        {"email": "troubnique@gmail.com", "password": "sudobangbang"}
                     ),
                     headers={"Content-Type": "application/json"},
                 )
@@ -57,7 +57,7 @@ class UserTest(BaseTest):
                     headers={"Content-Type": "application/json"},
                     data=json.dumps(
                         {
-                            "username": "troubnique",
+                            "email": "troubnique@gmail.com",
                             "password": "sudobangbang",
                             "first_name": "Слава",
                             "sex": True,
@@ -69,7 +69,7 @@ class UserTest(BaseTest):
                     headers={"Content-Type": "application/json"},
                     data=json.dumps(
                         {
-                            "username": "troubnique",
+                            "email": "troubnique@gmail.com",
                             "password": "sudobangbang",
                             "first_name": "Слава",
                             "sex": True,
@@ -78,4 +78,7 @@ class UserTest(BaseTest):
                 )
 
                 self.assertEqual(response.status_code, 400)
-                self.assertDictEqual({"msg": "user exists"}, json.loads(response.data))
+                self.assertDictEqual(
+                    {"msg": "Пользователь с таким адресом почты уже существует!"},
+                    json.loads(response.data),
+                )
