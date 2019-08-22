@@ -16,18 +16,23 @@ class UserTest(BaseTest):
                             "password": "sudobangbang",
                             "first_name": "Слава",
                             "sex": True,
+                            "city": "Санкт-Петербург",
+                            "city_id": "ChIJ7WVKx4w3lkYR_46Eqz9nx20",
                         }
                     ),
                 )
-
-                self.assertDictEqual({"msg": "user created"}, json.loads(response.data))
+                print(response)
+                # user logged in
+                self.assertIn("access_token", json.loads(response.data).keys())
+                self.assertIn("refresh_token", json.loads(response.data).keys())
+                # correct code
                 self.assertEqual(response.status_code, 201)
                 self.assertIsNotNone(UserModel.find_by_email("troubnique@gmail.com"))
 
-    def test_register_and_login(self):
+    def test_register_logout_and_login(self):
         with self.app() as client:  # new app instance
             with self.app_context():  # initializes db
-                client.post(
+                response = client.post(
                     "/register",
                     headers={"Content-Type": "application/json"},
                     data=json.dumps(
@@ -37,9 +42,21 @@ class UserTest(BaseTest):
                             "first_name": "Слава",
                             "sex": True,
                             "birthday": "16-10-1997",
+                            "city": "Санкт-Петербург",
+                            "city_id": "ChIJ7WVKx4w3lkYR_46Eqz9nx20",
                         }
                     ),
                 )
+                token = json.loads(response.data)["access_token"]
+                logout_response = client.post(
+                    "/logout",
+                    headers={
+                        "Content-Type": "application/json",
+                        "Authorization": f"Bearer {token}",
+                    },
+                )
+                # User logged out
+                self.assertEqual(logout_response.status_code, 200)
                 login_response = client.post(
                     "/login",
                     data=json.dumps(
@@ -61,6 +78,8 @@ class UserTest(BaseTest):
                             "password": "sudobangbang",
                             "first_name": "Слава",
                             "sex": True,
+                            "city": "Санкт-Петербург",
+                            "city_id": "ChIJ7WVKx4w3lkYR_46Eqz9nx20",
                         }
                     ),
                 )
@@ -73,6 +92,8 @@ class UserTest(BaseTest):
                             "password": "sudobangbang",
                             "first_name": "Слава",
                             "sex": True,
+                            "city": "Санкт-Петербург",
+                            "city_id": "ChIJ7WVKx4w3lkYR_46Eqz9nx20",
                         }
                     ),
                 )

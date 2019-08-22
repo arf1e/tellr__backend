@@ -35,7 +35,7 @@ class SelfSchema(ModelSchema):
     # custom fields
     age = Age(attribute="birthday")
     lines = ma.Nested(
-        "LineSchema",
+        "LineExtendedSchema",
         many=True,
         exclude=("user", "user_id", "correct_id", "question.answers"),
     )

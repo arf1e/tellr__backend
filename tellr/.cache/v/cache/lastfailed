@@ -1,0 +1,7 @@
+{
+  "tests/base_test.py": true, 
+  "tests/integration/schemas/user_test.py": true, 
+  "tests/system/user_test.py": true, 
+  "tests/unit/schemas/question_category_test.py": true, 
+  "tests/unit/schemas/user_test.py": true
+}

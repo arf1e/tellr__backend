@@ -28,7 +28,6 @@ class Self(Resource):
         user_id = get_jwt_identity()
         user = UserModel.find_by_id(user_id)
         req_json = request.get_json()
-        print(req_json)
         if "instagram" in req_json.keys():
             user.instagram = req_json["instagram"]
         if "vk" in req_json.keys():
