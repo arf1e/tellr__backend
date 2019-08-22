@@ -16,4 +16,4 @@ class QuestionCategoryExtendedSchema(ModelSchema):
         model = QuestionCategoryModel
         include_fk = True
 
-    questions = ma.Nested(QuestionSchema, many=True, exclude=("category_id",))
+    questions = ma.Nested("QuestionSchema", many=True, exclude=("category_id",))

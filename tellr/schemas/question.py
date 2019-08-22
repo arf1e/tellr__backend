@@ -11,3 +11,12 @@ class QuestionSchema(ModelSchema):
         include_fk = True
 
     answers = ma.Nested(AnswerSchema, many=True, exclude=("question_id",))
+
+
+class QuestionExtendedSchema(ModelSchema):
+    class Meta:
+        model = QuestionModel
+        include_fk = True
+
+    answers = ma.Nested(AnswerSchema, many=True, exclude=("question_id",))
+    category = ma.Nested("QuestionCategorySchema")

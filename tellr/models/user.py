@@ -17,11 +17,12 @@ class UserModel(Model):
     # basic info
     email = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)
-    city = db.Column(db.String(40), default="Санкт-Петербург")
+    city = db.Column(db.String(40), nullable=False)
+    city_id = db.Column(db.String(150), nullable=False)
     sex = db.Column(db.Boolean)
-    first_name = db.Column(db.String)
+    first_name = db.Column(db.String(20))
     birthday = db.Column(db.DateTime, default=date(1997, 10, 16))
-
+    description = db.Column(db.String(140))
     avatar = db.Column(db.String())
     avatar_big = db.Column(db.String())
     instagram = db.Column(db.String(30))

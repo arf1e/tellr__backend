@@ -50,6 +50,7 @@ class UserRegister(Resource):
     def post(self):
 
         user_json = request.get_json()
+        print(user_json)
         if "birthday" in user_json:
             bday = user_json["birthday"].split("-")
             user_json["birthday"] = f"{bday[2]}-{bday[1]}-{bday[0]}T00:00:00Z"
@@ -61,15 +62,24 @@ class UserRegister(Resource):
             user.save_to_db()
         except:
             return {"message": DATABASE_ERROR}, 500
-        return {"msg": "user created"}, 201
+        # Сразу же логиним новго юзверя
+        access_token = create_access_token(identity=user.id, expires_delta=False)
+        refresh_token = create_refresh_token(user.id)
+        return (
+            {
+                "access_token": access_token,
+                "refresh_token": refresh_token,
+                "user": self_schema.dump(user),
+            },
+            201,
+        )
 
 
 class UserLogin(Resource):
     @classmethod
     def post(cls):
         user_json = request.get_json()
-        user_data = user_schema.load(user_json)
-        user = UserModel.find_by_email(user_data.email)
+        user = UserModel.find_by_email(user_json["email"])
         if user and check_encrypted_password(user_json["password"], user.password):
             access_token = create_access_token(identity=user.id, expires_delta=False)
             refresh_token = create_refresh_token(user.id)
@@ -135,7 +145,6 @@ class User(Resource):
         try:
             req.save_to_db()
         except Exception as e:
-            print(e)
             return {"message": DATABASE_ERROR}, 500
         # Сохраняем в базу гессы, которые были убраны из json на строке 118
         for guess in guesses_json:

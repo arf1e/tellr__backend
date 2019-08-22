@@ -14,6 +14,8 @@ class UserTest(BaseTest):
                     "password": "12345",
                     "first_name": "Егор",
                     "sex": True,
+                    "city": "Санкт-Петербург",
+                    "city_id": "ChIJ7WVKx4w3lkYR_46Eqz9nx20",
                 }
             )
 
