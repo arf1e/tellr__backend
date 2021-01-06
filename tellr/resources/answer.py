@@ -1,13 +1,15 @@
 from flask_restplus import Resource
 from flask import request
+from flask_jwt_extended import jwt_required
+
 from tellr.schemas.answer import AnswerSchema
 from tellr.models.answer import AnswerModel
-
 answer_schema = AnswerSchema()
 answer_list_schema = AnswerSchema(many=True)
 
 
 class Answer(Resource):
+    @jwt_required
     def post(self):
         """
         Answer creation resource.
